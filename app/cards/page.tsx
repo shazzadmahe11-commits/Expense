@@ -3,7 +3,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { formatCAD, CARD_COLORS } from '@/lib/utils';
 
-interface Card { id: string; name: string; type: string; color: string; limit: number | null; }
+interface Card {
+  id: string; name: string; type: string; color: string; limit: number | null;
+  totalSpent: number; totalIncome: number; available: number | null;
+}
 
 export default function CardsPage() {
   const [cards, setCards] = useState<Card[]>([]);
@@ -91,10 +94,41 @@ export default function CardsPage() {
                     <span style={{ fontSize: 18 }}>{card.type === 'CREDIT' ? '💳' : '🏦'}</span>
                   </div>
                 </div>
-                {card.limit && (
-                  <div style={{ marginBottom: 4 }}>
-                    <div className="payment-card-label">Credit Limit</div>
-                    <div className="payment-card-amount" style={{ fontSize: 16 }}>{formatCAD(card.limit)}</div>
+                {card.type === 'CREDIT' ? (
+                  <>
+                    <div style={{ marginBottom: 4 }}>
+                      <div className="payment-card-label">Used</div>
+                      <div className="payment-card-amount" style={{ fontSize: 16 }}>{formatCAD(card.totalSpent)}</div>
+                    </div>
+                    {card.limit ? (
+                      <>
+                        <div style={{ height: 6, borderRadius: 999, background: 'var(--border)', overflow: 'hidden', margin: '8px 0' }}>
+                          <div style={{
+                            height: '100%',
+                            width: `${Math.min((card.totalSpent / card.limit) * 100, 100)}%`,
+                            background: card.totalSpent >= card.limit ? 'var(--red)' : card.color,
+                            borderRadius: 999,
+                          }} />
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--text-secondary)' }}>
+                          <span>Available: {formatCAD(card.available ?? 0)}</span>
+                          <span>Limit: {formatCAD(card.limit)}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>No credit limit set</div>
+                    )}
+                  </>
+                ) : (
+                  <div style={{ display: 'flex', gap: 16 }}>
+                    <div>
+                      <div className="payment-card-label">Spent</div>
+                      <div className="payment-card-amount" style={{ fontSize: 16, color: 'var(--red)' }}>{formatCAD(card.totalSpent)}</div>
+                    </div>
+                    <div>
+                      <div className="payment-card-label">Income</div>
+                      <div className="payment-card-amount" style={{ fontSize: 16, color: 'var(--green)' }}>{formatCAD(card.totalIncome)}</div>
+                    </div>
                   </div>
                 )}
                 <div className="payment-card-actions">
