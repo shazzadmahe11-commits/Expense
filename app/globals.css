@@ -873,6 +873,18 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 100;
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   :root { --sidebar-width: 0px; }
@@ -916,18 +928,6 @@ body {
   .mobile-nav {
     display: flex;
   }
-}
-
-.mobile-nav {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  z-index: 100;
-  padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
 }
 
 .mobile-nav-link {
