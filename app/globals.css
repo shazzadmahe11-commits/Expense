@@ -891,6 +891,7 @@ body {
 
   .page-body {
     padding: 16px 16px 32px;
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
   
   .stats-grid {
