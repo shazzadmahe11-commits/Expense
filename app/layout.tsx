@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Sidebar from '@/components/Sidebar';
 import MobileNav from '@/components/MobileNav';
@@ -6,6 +6,12 @@ import MobileNav from '@/components/MobileNav';
 export const metadata: Metadata = {
   title: 'Expense Tracker',
   description: 'Track your monthly expenses, card spending, and net amount.',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
