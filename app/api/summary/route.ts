@@ -1,0 +1,67 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const year = parseInt(searchParams.get('year') || String(new Date().getFullYear()));
+  const month = parseInt(searchParams.get('month') || String(new Date().getMonth()));
+
+  const start = new Date(year, month, 1);
+  const end = new Date(year, month + 1, 0, 23, 59, 59, 999);
+
+  // Monthly transactions — powers the "this month" figures (Total Spent,
+  // Total Income, category breakdown) which are meant to reset every month.
+  const monthTransactions = await prisma.transaction.findMany({
+    where: { date: { gte: start, lte: end } },
+    include: { card: true, category: true },
+  });
+
+  const totalExpenses = monthTransactions
+    .filter((t) => t.type === 'EXPENSE')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const totalIncome = monthTransactions
+    .filter((t) => t.type === 'INCOME')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const categoryMap: Record<string, { category: { id: string; name: string; icon: string; color: string }; total: number }> = {};
+  for (const tx of monthTransactions.filter((t) => t.type === 'EXPENSE')) {
+    if (!categoryMap[tx.categoryId]) {
+      categoryMap[tx.categoryId] = { category: tx.category, total: 0 };
+    }
+    categoryMap[tx.categoryId].total += tx.amount;
+  }
+  const categoryBreakdown = Object.values(categoryMap).sort((a, b) => b.total - a.total);
+
+  // All-time transactions — powers Net Amount and the per-card totals, which
+  // should keep accumulating rather than reset when the month changes.
+  const allTransactions = await prisma.transaction.findMany({
+    include: { card: true },
+  });
+
+  const totalExpensesAllTime = allTransactions
+    .filter((t) => t.type === 'EXPENSE')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const totalIncomeAllTime = allTransactions
+    .filter((t) => t.type === 'INCOME')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const netAmount = totalIncomeAllTime - totalExpensesAllTime;
+
+  const cardMap: Record<string, { card: { id: string; name: string; color: string; type: string; limit: number | null }; expenses: number; income: number }> = {};
+  for (const tx of allTransactions) {
+    if (!cardMap[tx.cardId]) {
+      cardMap[tx.cardId] = { card: tx.card, expenses: 0, income: 0 };
+    }
+    if (tx.type === 'EXPENSE') cardMap[tx.cardId].expenses += tx.amount;
+    else cardMap[tx.cardId].income += tx.amount;
+  }
+  const cardBreakdown = Object.values(cardMap).sort((a, b) => b.expenses - a.expenses);
+
+  return NextResponse.json({
+    totalExpenses,
+    totalIncome,
+    transactionCount: monthTransactions.length,
+    categoryBreakdown,
+    netAmount,
+    cardBreakdown,
+  });
+}
