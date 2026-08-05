@@ -123,7 +123,8 @@ export default function TransactionsPage() {
           {loading ? (
             <div className="loading">Loading...</div>
           ) : transactions.length > 0 ? (
-            <table className="data-table">
+            <>
+            <table className="data-table desktop-only-table">
               <thead>
                 <tr>
                   <th>Description</th>
@@ -158,6 +159,27 @@ export default function TransactionsPage() {
                 ))}
               </tbody>
             </table>
+
+            <div className="mobile-tx-list">
+              {transactions.map((tx) => (
+                <div key={tx.id} className="tx-row">
+                  <div className="tx-row-main">
+                    <div className="tx-row-icon">{tx.category.icon}</div>
+                    <div className="tx-row-info">
+                      <div className="tx-row-title">{tx.description || tx.category.name}</div>
+                      <div className="tx-row-sub">{formatDate(tx.date)} · {tx.card.name}</div>
+                    </div>
+                  </div>
+                  <div className="tx-row-end">
+                    <div className="tx-row-amount" style={{ color: tx.type === 'EXPENSE' ? 'var(--red)' : 'var(--green)' }}>
+                      {tx.type === 'EXPENSE' ? '-' : '+'}{formatCAD(tx.amount)}
+                    </div>
+                    <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(tx.id)} aria-label="Delete transaction">✕</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            </>
           ) : (
             <div className="empty-state">
               <div className="empty-icon">📋</div>
