@@ -146,6 +146,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="card-body" style={{ padding: 0 }}>
                   {summary.cardBreakdown.length > 0 ? (
+                    <div className="table-scroll">
                     <table className="data-table">
                       <thead>
                         <tr>
@@ -175,6 +176,7 @@ export default function DashboardPage() {
                         ))}
                       </tbody>
                     </table>
+                    </div>
                   ) : (
                     <div className="empty-state">
                       <div className="empty-icon">💳</div>
