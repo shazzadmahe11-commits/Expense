@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { href: '/', icon: '◉', label: 'Home' },
-  { href: '/transactions', icon: '↕', label: 'Txns' },
-  { href: '/cards', icon: '▣', label: 'Cards' },
-  { href: '/categories', icon: '◈', label: 'Cats' },
+  { href: '/', icon: '🏠', label: 'Home' },
+  { href: '/transactions', icon: '💸', label: 'Txns' },
+  { href: '/cards', icon: '💳', label: 'Cards' },
+  { href: '/categories', icon: '🏷️', label: 'Cats' },
 ];
 
 export default function MobileNav() {
