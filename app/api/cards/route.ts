@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getUserId } from '@/lib/auth';
 
 export async function GET() {
-  const cards = await prisma.card.findMany({ orderBy: { createdAt: 'asc' } });
+  const userId = await getUserId();
+  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const cards = await prisma.card.findMany({ where: { userId }, orderBy: { createdAt: 'asc' } });
 
   const sums = await prisma.transaction.groupBy({
     by: ['cardId', 'type'],
+    where: { userId },
     _sum: { amount: true },
   });
 
@@ -24,13 +29,16 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const userId = await getUserId();
+  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const body = await req.json();
   const { name, type, color, limit } = body;
   if (!name || !type) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
   const card = await prisma.card.create({
-    data: { name, type, color: color || '#6366f1', limit: limit ? parseFloat(limit) : null },
+    data: { userId, name, type, color: color || '#6366f1', limit: limit ? parseFloat(limit) : null },
   });
   return NextResponse.json(card, { status: 201 });
 }
