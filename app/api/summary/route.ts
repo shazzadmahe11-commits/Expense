@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getUserId } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
+  const userId = await getUserId();
+  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const { searchParams } = new URL(req.url);
   const year = parseInt(searchParams.get('year') || String(new Date().getFullYear()));
   const month = parseInt(searchParams.get('month') || String(new Date().getMonth()));
@@ -12,7 +16,7 @@ export async function GET(req: NextRequest) {
   // Monthly transactions — powers the "this month" figures (Total Spent,
   // Total Income, category breakdown) which are meant to reset every month.
   const monthTransactions = await prisma.transaction.findMany({
-    where: { date: { gte: start, lte: end } },
+    where: { userId, date: { gte: start, lte: end } },
     include: { card: true, category: true },
   });
 
@@ -35,6 +39,7 @@ export async function GET(req: NextRequest) {
   // All-time transactions — powers Net Amount and the per-card totals, which
   // should keep accumulating rather than reset when the month changes.
   const allTransactions = await prisma.transaction.findMany({
+    where: { userId },
     include: { card: true },
   });
 
