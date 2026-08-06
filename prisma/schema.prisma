@@ -13,6 +13,7 @@ datasource db {
 
 model Card {
   id           String        @id @default(cuid())
+  userId       String
   name         String
   type         String        // "CREDIT" | "DEBIT"
   color        String        @default("#6366f1")
@@ -20,19 +21,26 @@ model Card {
   transactions Transaction[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+
+  @@index([userId])
 }
 
 model Category {
   id           String        @id @default(cuid())
-  name         String        @unique
+  userId       String
+  name         String
   icon         String        @default("💰")
   color        String        @default("#6366f1")
   transactions Transaction[]
   createdAt    DateTime      @default(now())
+
+  @@unique([userId, name])
+  @@index([userId])
 }
 
 model Transaction {
   id          String   @id @default(cuid())
+  userId      String
   amount      Float
   type        String   // "EXPENSE" | "INCOME"
   description String?
@@ -43,4 +51,6 @@ model Transaction {
   category    Category @relation(fields: [categoryId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }
