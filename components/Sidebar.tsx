@@ -1,6 +1,8 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 
 const navItems = [
   { href: '/', icon: '◉', label: 'Dashboard' },
@@ -11,10 +13,27 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
+  }, []);
+
+  if (pathname === '/login') return null;
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  };
+
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <h1>GORIB</h1>
+        <h1>Spendly</h1>
         <p>Personal Finance Tracker</p>
       </div>
       <nav className="sidebar-nav">
@@ -30,6 +49,16 @@ export default function Sidebar() {
           </Link>
         ))}
       </nav>
+      <div style={{ marginTop: 'auto', padding: '16px 20px', borderTop: '1px solid var(--border-light)' }}>
+        {email && (
+          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {email}
+          </div>
+        )}
+        <button className="btn btn-secondary btn-sm" style={{ width: '100%' }} onClick={handleLogout}>
+          Log out
+        </button>
+      </div>
     </aside>
   );
 }
