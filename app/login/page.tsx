@@ -48,7 +48,7 @@ export default function LoginPage() {
     }}>
       <div className="card" style={{ width: '100%', maxWidth: 400, padding: 32 }}>
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: -0.5 }}>Spendly</h1>
+          <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: -0.5 }}>Gorib</h1>
           <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>
             {mode === 'signin' ? 'Log in to your account' : 'Create your account'}
           </p>
