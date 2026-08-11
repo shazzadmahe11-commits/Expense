@@ -41,7 +41,7 @@ export default function MobileNav() {
         <button className="mobile-topbar-btn" onClick={() => setOpen(true)} aria-label="Open menu">
           ☰
         </button>
-        <span className="mobile-topbar-title">Spendly</span>
+        <span className="mobile-topbar-title">Gorib</span>
       </header>
 
       {open && <div className="mobile-drawer-overlay" onClick={() => setOpen(false)} />}
@@ -49,7 +49,7 @@ export default function MobileNav() {
       <aside className={`mobile-drawer${open ? ' open' : ''}`}>
         <div className="mobile-drawer-header">
           <div>
-            <div className="mobile-drawer-logo">Spendly</div>
+            <div className="mobile-drawer-logo">Gori</div>
             <div className="mobile-drawer-sub">Personal Finance Tracker</div>
           </div>
           <button className="mobile-drawer-close" onClick={() => setOpen(false)} aria-label="Close menu">
