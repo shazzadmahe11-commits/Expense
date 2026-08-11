@@ -1,18 +1,30 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
 const navItems = [
-  { href: '/', icon: '🏠', label: 'Home' },
-  { href: '/transactions', icon: '💸', label: 'Txns' },
+  { href: '/', icon: '🏠', label: 'Dashboard' },
+  { href: '/transactions', icon: '💸', label: 'Transactions' },
   { href: '/cards', icon: '💳', label: 'Cards' },
-  { href: '/categories', icon: '🏷️', label: 'Cats' },
+  { href: '/categories', icon: '🏷️', label: 'Categories' },
 ];
 
 export default function MobileNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
+  }, []);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   if (pathname === '/login') return null;
 
@@ -24,25 +36,47 @@ export default function MobileNav() {
   };
 
   return (
-    <nav className="mobile-nav">
-      {navItems.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={`mobile-nav-link${pathname === item.href ? ' active' : ''}`}
-        >
-          <span>{item.icon}</span>
-          <span>{item.label}</span>
-        </Link>
-      ))}
-      <button
-        onClick={handleLogout}
-        className="mobile-nav-link"
-        style={{ background: 'none', border: 'none', font: 'inherit', cursor: 'pointer' }}
-      >
-        <span>🚪</span>
-        <span>Logout</span>
-      </button>
-    </nav>
+    <>
+      <header className="mobile-topbar">
+        <button className="mobile-topbar-btn" onClick={() => setOpen(true)} aria-label="Open menu">
+          ☰
+        </button>
+        <span className="mobile-topbar-title">Spendly</span>
+      </header>
+
+      {open && <div className="mobile-drawer-overlay" onClick={() => setOpen(false)} />}
+
+      <aside className={`mobile-drawer${open ? ' open' : ''}`}>
+        <div className="mobile-drawer-header">
+          <div>
+            <div className="mobile-drawer-logo">Spendly</div>
+            <div className="mobile-drawer-sub">Personal Finance Tracker</div>
+          </div>
+          <button className="mobile-drawer-close" onClick={() => setOpen(false)} aria-label="Close menu">
+            ✕
+          </button>
+        </div>
+
+        <nav className="mobile-drawer-nav">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`mobile-drawer-link${pathname === item.href ? ' active' : ''}`}
+            >
+              <span className="drawer-icon">{item.icon}</span>
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="mobile-drawer-footer">
+          {email && <div className="mobile-drawer-email">{email}</div>}
+          <button className="btn btn-secondary btn-sm" style={{ width: '100%' }} onClick={handleLogout}>
+            Log out
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
