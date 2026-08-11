@@ -4,7 +4,7 @@ import Sidebar from '@/components/Sidebar';
 import MobileNav from '@/components/MobileNav';
 
 export const metadata: Metadata = {
-  title: 'Expense Tracker',
+  title: 'Gorib.com',
   description: 'Track your monthly expenses, card spending, and net amount.',
 };
 
