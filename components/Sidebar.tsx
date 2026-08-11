@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const navItems = [
   { href: '/', icon: '◉', label: 'Dashboard' },
@@ -32,9 +33,12 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-logo">
-        <h1>Gorib</h1>
-        <p>Personal Finance Tracker</p>
+      <div className="sidebar-logo" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <div>
+          <h1>Spendly</h1>
+          <p>Personal Finance Tracker</p>
+        </div>
+        <ThemeToggle />
       </div>
       <nav className="sidebar-nav">
         <div className="nav-label">Menu</div>
