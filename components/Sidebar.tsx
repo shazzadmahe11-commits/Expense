@@ -33,7 +33,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <h1>Spendly</h1>
+        <h1>Gorib</h1>
         <p>Personal Finance Tracker</p>
       </div>
       <nav className="sidebar-nav">
