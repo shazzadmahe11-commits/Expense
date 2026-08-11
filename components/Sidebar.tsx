@@ -35,7 +35,7 @@ export default function Sidebar() {
     <aside className="sidebar">
       <div className="sidebar-logo" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <h1>Spendly</h1>
+          <h1>Gorib</h1>
           <p>Personal Finance Tracker</p>
         </div>
         <ThemeToggle />
