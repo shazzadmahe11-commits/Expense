@@ -11,10 +11,16 @@ export async function DELETE(
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { id } = await params;
-  const result = await prisma.transaction.deleteMany({ where: { id, userId } });
-  if (result.count === 0) {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  const existing = await prisma.transaction.findFirst({ where: { id, userId } });
+  if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+
+  if (existing.type === 'TRANSFER' && existing.transferId) {
+    // Delete both legs of the transfer together so balances stay consistent.
+    await prisma.transaction.deleteMany({ where: { transferId: existing.transferId, userId } });
+  } else {
+    await prisma.transaction.deleteMany({ where: { id, userId } });
   }
+
   return NextResponse.json({ success: true });
 }
 
