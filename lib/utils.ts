@@ -45,3 +45,9 @@ export const CATEGORY_COLORS = [
   '#8b5cf6', '#ec4899', '#ef4444', '#06b6d4',
   '#6366f1', '#14b8a6', '#22c55e', '#94a3b8',
 ];
+
+export const BROKERS = [
+  'Wealthsimple', 'Questrade', 'TD Direct Investing', 'RBC Direct Investing',
+  "CIBC Investor's Edge", 'Scotia iTRADE', 'BMO InvestorLine',
+  'National Bank Direct Brokerage', 'Interactive Brokers', 'Other',
+];
