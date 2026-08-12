@@ -51,15 +51,26 @@ export async function GET(req: NextRequest) {
     .reduce((sum, t) => sum + t.amount, 0);
   const netAmount = totalIncomeAllTime - totalExpensesAllTime;
 
-  const cardMap: Record<string, { card: { id: string; name: string; color: string; type: string; limit: number | null }; expenses: number; income: number }> = {};
+  const cardMap: Record<string, { card: { id: string; name: string; color: string; type: string; limit: number | null }; expenses: number; income: number; transferred: number }> = {};
   for (const tx of allTransactions) {
     if (!cardMap[tx.cardId]) {
-      cardMap[tx.cardId] = { card: tx.card, expenses: 0, income: 0 };
+      cardMap[tx.cardId] = { card: tx.card, expenses: 0, income: 0, transferred: 0 };
     }
     if (tx.type === 'EXPENSE') cardMap[tx.cardId].expenses += tx.amount;
-    else cardMap[tx.cardId].income += tx.amount;
+    else if (tx.type === 'INCOME') cardMap[tx.cardId].income += tx.amount;
+    else if (tx.type === 'TRANSFER') cardMap[tx.cardId].transferred += tx.amount;
   }
-  const cardBreakdown = Object.values(cardMap).sort((a, b) => b.expenses - a.expenses);
+  const cardBreakdown = Object.values(cardMap)
+    .map((entry) => ({
+      card: entry.card,
+      // Same logic as the Cards page: a credit card payment (transfer in)
+      // reduces what's owed, rather than counting as separate spending.
+      expenses: entry.card.type === 'CREDIT'
+        ? Math.max(entry.expenses - entry.transferred, 0)
+        : entry.expenses,
+      income: entry.income,
+    }))
+    .sort((a, b) => b.expenses - a.expenses);
 
   return NextResponse.json({
     totalExpenses,
