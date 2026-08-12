@@ -42,15 +42,17 @@ model Transaction {
   id          String   @id @default(cuid())
   userId      String
   amount      Float
-  type        String   // "EXPENSE" | "INCOME"
+  type        String   // "EXPENSE" | "INCOME" | "TRANSFER"
   description String?
   date        DateTime
   cardId      String
   card        Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
+  transferId  String?  // links the two legs of a card-to-card transfer
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([userId])
+  @@index([transferId])
 }
