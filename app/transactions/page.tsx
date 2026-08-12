@@ -19,6 +19,7 @@ export default function TransactionsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [editTx, setEditTx] = useState<Transaction | null>(null);
   const [filterCard, setFilterCard] = useState('');
   const [filterType, setFilterType] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
@@ -53,17 +54,45 @@ export default function TransactionsPage() {
   const nextMonth = () => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); };
   const isCurrentMonth = year === now.getFullYear() && month === now.getMonth();
 
+  const openAdd = () => {
+    setEditTx(null);
+    setForm({ amount: '', type: 'EXPENSE', description: '', date: now.toISOString().split('T')[0], cardId: '', categoryId: '' });
+    setShowModal(true);
+  };
+
+  const openEdit = (tx: Transaction) => {
+    setEditTx(tx);
+    setForm({
+      amount: String(tx.amount),
+      type: tx.type,
+      description: tx.description || '',
+      date: tx.date.split('T')[0],
+      cardId: tx.card.id,
+      categoryId: tx.category.id,
+    });
+    setShowModal(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.amount || !form.cardId || !form.categoryId) return;
     setSubmitting(true);
-    await fetch('/api/transactions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
+    if (editTx) {
+      await fetch(`/api/transactions/${editTx.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+    } else {
+      await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+    }
     setSubmitting(false);
     setShowModal(false);
+    setEditTx(null);
     setForm({ amount: '', type: 'EXPENSE', description: '', date: now.toISOString().split('T')[0], cardId: '', categoryId: '' });
     loadAll();
   };
@@ -93,7 +122,7 @@ export default function TransactionsPage() {
                 style={{ opacity: isCurrentMonth ? 0.3 : 1, cursor: isCurrentMonth ? 'not-allowed' : 'pointer' }}
                 id="tx-next-month">›</button>
             </div>
-            <button className="btn btn-primary" id="add-transaction-btn" onClick={() => setShowModal(true)}>+ Add</button>
+            <button className="btn btn-primary" id="add-transaction-btn" onClick={openAdd}>+ Add</button>
           </div>
         </div>
       </div>
@@ -157,6 +186,9 @@ export default function TransactionsPage() {
                       {tx.type === 'EXPENSE' ? '-' : tx.type === 'INCOME' ? '+' : ''}{formatCAD(tx.amount)}
                     </td>
                     <td>
+                      {tx.type !== 'TRANSFER' && (
+                        <button className="btn btn-ghost btn-sm" onClick={() => openEdit(tx)} aria-label="Edit transaction" style={{ marginRight: 4 }}>✎</button>
+                      )}
                       <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(tx.id)} aria-label="Delete transaction">✕</button>
                     </td>
                   </tr>
@@ -180,6 +212,9 @@ export default function TransactionsPage() {
                     }}>
                       {tx.type === 'EXPENSE' ? '-' : tx.type === 'INCOME' ? '+' : ''}{formatCAD(tx.amount)}
                     </div>
+                    {tx.type !== 'TRANSFER' && (
+                      <button className="btn btn-ghost btn-sm" onClick={() => openEdit(tx)} aria-label="Edit transaction">✎</button>
+                    )}
                     <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(tx.id)} aria-label="Delete transaction">✕</button>
                   </div>
                 </div>
@@ -196,13 +231,13 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      {/* Add Transaction Modal */}
+      {/* Add/Edit Transaction Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
           <div className="modal">
             <div className="modal-header">
-              <span className="modal-title">Add Transaction</span>
-              <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+              <span className="modal-title">{editTx ? 'Edit Transaction' : 'Add Transaction'}</span>
+              <button className="modal-close" onClick={() => { setShowModal(false); setEditTx(null); }}>✕</button>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="modal-body">
@@ -258,9 +293,9 @@ export default function TransactionsPage() {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="button" className="btn btn-secondary" onClick={() => { setShowModal(false); setEditTx(null); }}>Cancel</button>
                 <button type="submit" className="btn btn-primary" id="submit-transaction-btn" disabled={submitting}>
-                  {submitting ? 'Saving...' : 'Add Transaction'}
+                  {submitting ? 'Saving...' : editTx ? 'Save Changes' : 'Add Transaction'}
                 </button>
               </div>
             </form>
