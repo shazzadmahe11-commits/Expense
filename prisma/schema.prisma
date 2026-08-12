@@ -56,3 +56,16 @@ model Transaction {
   @@index([userId])
   @@index([transferId])
 }
+
+// Fully standalone — not linked to Card, Category, or Transaction in any way.
+model Investment {
+  id        String   @id @default(cuid())
+  userId    String
+  broker    String
+  stock     String
+  amount    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
