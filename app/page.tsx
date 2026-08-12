@@ -34,6 +34,9 @@ interface Transaction {
   category: { name: string; icon: string };
 }
 
+interface Card { id: string; name: string; type: string; color: string; limit: number | null; }
+interface Category { id: string; name: string; icon: string; color: string; }
+
 export default function DashboardPage() {
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
@@ -42,13 +45,24 @@ export default function DashboardPage() {
   const [recentTx, setRecentTx] = useState<Transaction[]>([]);
   const [totalInvested, setTotalInvested] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [cards, setCards] = useState<Card[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState({
+    amount: '', type: 'EXPENSE', description: '', date: now.toISOString().split('T')[0],
+    cardId: '', categoryId: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [sumRes, txRes, invRes] = await Promise.all([
+    const [sumRes, txRes, invRes, cardRes, catRes] = await Promise.all([
       fetch(`/api/summary?year=${year}&month=${month}`),
       fetch(`/api/transactions?year=${year}&month=${month}`),
       fetch('/api/investments'),
+      fetch('/api/cards'),
+      fetch('/api/categories'),
     ]);
     const sumData = await sumRes.json();
     const txData = await txRes.json();
@@ -56,10 +70,31 @@ export default function DashboardPage() {
     setSummary(sumData);
     setRecentTx(txData.slice(0, 8));
     setTotalInvested(Array.isArray(invData) ? invData.reduce((sum: number, i: { amount: number }) => sum + i.amount, 0) : 0);
+    setCards(await cardRes.json());
+    setCategories(await catRes.json());
     setLoading(false);
   }, [year, month]);
 
   useEffect(() => { load(); }, [load]);
+
+  const openAdd = () => {
+    setForm({ amount: '', type: 'EXPENSE', description: '', date: now.toISOString().split('T')[0], cardId: '', categoryId: '' });
+    setShowModal(true);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.amount || !form.cardId || !form.categoryId) return;
+    setSubmitting(true);
+    await fetch('/api/transactions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    });
+    setSubmitting(false);
+    setShowModal(false);
+    load();
+  };
 
   const prevMonth = () => {
     if (month === 0) { setMonth(11); setYear(y => y - 1); }
@@ -79,17 +114,20 @@ export default function DashboardPage() {
             <h2 className="page-title">Dashboard</h2>
             <p className="page-subtitle">Your monthly spending overview</p>
           </div>
-          <div className="month-picker">
-            <button className="month-btn" onClick={prevMonth} id="prev-month-btn" aria-label="Previous month">‹</button>
-            <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
-            <button
-              className="month-btn"
-              onClick={nextMonth}
-              disabled={isCurrentMonth}
-              id="next-month-btn"
-              aria-label="Next month"
-              style={{ opacity: isCurrentMonth ? 0.3 : 1, cursor: isCurrentMonth ? 'not-allowed' : 'pointer' }}
-            >›</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div className="month-picker">
+              <button className="month-btn" onClick={prevMonth} id="prev-month-btn" aria-label="Previous month">‹</button>
+              <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
+              <button
+                className="month-btn"
+                onClick={nextMonth}
+                disabled={isCurrentMonth}
+                id="next-month-btn"
+                aria-label="Next month"
+                style={{ opacity: isCurrentMonth ? 0.3 : 1, cursor: isCurrentMonth ? 'not-allowed' : 'pointer' }}
+              >›</button>
+            </div>
+            <button className="btn btn-primary" id="dashboard-add-transaction-btn" onClick={openAdd}>+ Add</button>
           </div>
         </div>
       </div>
@@ -237,6 +275,71 @@ export default function DashboardPage() {
           </>
         ) : null}
       </div>
+
+      {showModal && (
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+          <div className="modal">
+            <div className="modal-header">
+              <span className="modal-title">Add Transaction</span>
+              <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label className="form-label">Type</label>
+                  <div className="form-radio-group">
+                    {['EXPENSE', 'INCOME'].map(t => (
+                      <div className="form-radio" key={t}>
+                        <input type="radio" id={`dash-type-${t}`} name="dash-type" value={t} checked={form.type === t} onChange={e => setForm(f => ({ ...f, type: e.target.value }))} />
+                        <label htmlFor={`dash-type-${t}`}>{t === 'EXPENSE' ? '↓ Expense' : '↑ Income'}</label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="dash-tx-amount">Amount (CAD)</label>
+                    <input id="dash-tx-amount" type="number" step="0.01" min="0.01" className="form-input" placeholder="0.00"
+                      value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} required />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="dash-tx-date">Date</label>
+                    <input id="dash-tx-date" type="date" className="form-input"
+                      value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} required />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="dash-tx-card">Card</label>
+                    <select id="dash-tx-card" className="form-select" value={form.cardId} onChange={e => setForm(f => ({ ...f, cardId: e.target.value }))} required>
+                      <option value="">Select card</option>
+                      {cards.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="dash-tx-category">Category</label>
+                    <select id="dash-tx-category" className="form-select" value={form.categoryId} onChange={e => setForm(f => ({ ...f, categoryId: e.target.value }))} required>
+                      <option value="">Select category</option>
+                      {categories.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="dash-tx-desc">Description (optional)</label>
+                  <input id="dash-tx-desc" type="text" className="form-input" placeholder="e.g. Loblaws weekly groceries"
+                    value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" id="dash-submit-transaction-btn" disabled={submitting}>
+                  {submitting ? 'Saving...' : 'Add Transaction'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }
