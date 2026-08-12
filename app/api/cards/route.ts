@@ -15,13 +15,22 @@ export async function GET() {
   });
 
   const cardsWithTotals = cards.map((card) => {
-    const spent = sums.find((s) => s.cardId === card.id && s.type === 'EXPENSE')?._sum.amount || 0;
+    const expenses = sums.find((s) => s.cardId === card.id && s.type === 'EXPENSE')?._sum.amount || 0;
     const income = sums.find((s) => s.cardId === card.id && s.type === 'INCOME')?._sum.amount || 0;
+    const transferred = sums.find((s) => s.cardId === card.id && s.type === 'TRANSFER')?._sum.amount || 0;
+
+    // For a credit card, a transfer *into* it is a bill payment — it reduces
+    // what's owed, same as the physical world. For a debit card, a transfer
+    // *out* of it is real cash leaving, tracked separately from purchases.
+    const totalSpent = card.type === 'CREDIT' ? Math.max(expenses - transferred, 0) : expenses;
+    const totalTransferredOut = card.type === 'DEBIT' ? transferred : 0;
+
     return {
       ...card,
-      totalSpent: spent,
+      totalSpent,
       totalIncome: income,
-      available: card.limit != null ? Math.max(card.limit - spent, 0) : null,
+      totalTransferredOut,
+      available: card.limit != null ? Math.max(card.limit - totalSpent, 0) : null,
     };
   });
 
