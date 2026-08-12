@@ -105,6 +105,7 @@ export default function TransactionsPage() {
             <option value="">All Types</option>
             <option value="EXPENSE">Expenses</option>
             <option value="INCOME">Income</option>
+            <option value="TRANSFER">Transfers</option>
           </select>
           <select className="filter-select" value={filterCard} onChange={e => setFilterCard(e.target.value)} id="filter-card">
             <option value="">All Cards</option>
@@ -147,10 +148,13 @@ export default function TransactionsPage() {
                         <span style={{ fontSize: 12.5 }}>{tx.card.name}</span>
                       </div>
                     </td>
-                    <td style={{ fontSize: 12.5 }}>{tx.category.icon} {tx.category.name}</td>
+                    <td style={{ fontSize: 12.5 }}>{tx.type === 'TRANSFER' ? '🔁 Transfer' : `${tx.category.icon} ${tx.category.name}`}</td>
                     <td><span className={`badge badge-${tx.type.toLowerCase()}`}>{tx.type}</span></td>
-                    <td style={{ textAlign: 'right', fontWeight: 600, color: tx.type === 'EXPENSE' ? 'var(--red)' : 'var(--green)' }}>
-                      {tx.type === 'EXPENSE' ? '-' : '+'}{formatCAD(tx.amount)}
+                    <td style={{
+                      textAlign: 'right', fontWeight: 600,
+                      color: tx.type === 'EXPENSE' ? 'var(--red)' : tx.type === 'INCOME' ? 'var(--green)' : 'var(--text-primary)',
+                    }}>
+                      {tx.type === 'EXPENSE' ? '-' : tx.type === 'INCOME' ? '+' : ''}{formatCAD(tx.amount)}
                     </td>
                     <td>
                       <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(tx.id)} aria-label="Delete transaction">✕</button>
@@ -164,15 +168,17 @@ export default function TransactionsPage() {
               {transactions.map((tx) => (
                 <div key={tx.id} className="tx-row">
                   <div className="tx-row-main">
-                    <div className="tx-row-icon">{tx.category.icon}</div>
+                    <div className="tx-row-icon">{tx.type === 'TRANSFER' ? '🔁' : tx.category.icon}</div>
                     <div className="tx-row-info">
                       <div className="tx-row-title">{tx.description || tx.category.name}</div>
                       <div className="tx-row-sub">{formatDate(tx.date)} · {tx.card.name}</div>
                     </div>
                   </div>
                   <div className="tx-row-end">
-                    <div className="tx-row-amount" style={{ color: tx.type === 'EXPENSE' ? 'var(--red)' : 'var(--green)' }}>
-                      {tx.type === 'EXPENSE' ? '-' : '+'}{formatCAD(tx.amount)}
+                    <div className="tx-row-amount" style={{
+                      color: tx.type === 'EXPENSE' ? 'var(--red)' : tx.type === 'INCOME' ? 'var(--green)' : 'var(--text-primary)',
+                    }}>
+                      {tx.type === 'EXPENSE' ? '-' : tx.type === 'INCOME' ? '+' : ''}{formatCAD(tx.amount)}
                     </div>
                     <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(tx.id)} aria-label="Delete transaction">✕</button>
                   </div>
