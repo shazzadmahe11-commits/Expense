@@ -1157,7 +1157,7 @@ body {
 }
 
 /* ===== RESPONSIVE TABLE <-> LIST SWITCH ===== */
-.desktop-only-table { display: block; }
+.desktop-only-table { display: table; }
 .mobile-tx-list { display: none; }
 
 @media (max-width: 768px) {
