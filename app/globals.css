@@ -369,6 +369,7 @@ body {
 .badge-debit { background: var(--green-bg); color: var(--green); }
 .badge-expense { background: var(--red-bg); color: var(--red); }
 .badge-income { background: var(--green-bg); color: var(--green); }
+.badge-transfer { background: var(--accent-light); color: var(--accent-solid); }
 
 /* ===== COLOR DOT ===== */
 .color-dot {
@@ -684,6 +685,7 @@ body {
 
 .tx-amount.expense { color: var(--red); }
 .tx-amount.income { color: var(--green); }
+.tx-amount.transfer { color: var(--text-primary); }
 
 /* ===== EMPTY STATE ===== */
 .empty-state {
