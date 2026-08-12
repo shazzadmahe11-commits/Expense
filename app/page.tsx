@@ -40,18 +40,22 @@ export default function DashboardPage() {
   const [month, setMonth] = useState(now.getMonth());
   const [summary, setSummary] = useState<Summary | null>(null);
   const [recentTx, setRecentTx] = useState<Transaction[]>([]);
+  const [totalInvested, setTotalInvested] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [sumRes, txRes] = await Promise.all([
+    const [sumRes, txRes, invRes] = await Promise.all([
       fetch(`/api/summary?year=${year}&month=${month}`),
       fetch(`/api/transactions?year=${year}&month=${month}`),
+      fetch('/api/investments'),
     ]);
     const sumData = await sumRes.json();
     const txData = await txRes.json();
+    const invData = await invRes.json();
     setSummary(sumData);
     setRecentTx(txData.slice(0, 8));
+    setTotalInvested(Array.isArray(invData) ? invData.reduce((sum: number, i: { amount: number }) => sum + i.amount, 0) : 0);
     setLoading(false);
   }, [year, month]);
 
@@ -116,6 +120,11 @@ export default function DashboardPage() {
                   All time · {summary.netAmount >= 0 ? 'Positive balance ✓' : 'Over budget'}
                 </div>
               </div>
+              <a href="/investments" className="stat-card" style={{ textDecoration: 'none', display: 'block' }}>
+                <div className="stat-label">Total Invested</div>
+                <div className="stat-value" style={{ color: 'var(--blue)' }}>{formatCAD(totalInvested)}</div>
+                <div className="stat-sub">View investments →</div>
+              </a>
             </div>
 
             {/* Charts & Breakdowns */}
@@ -197,7 +206,7 @@ export default function DashboardPage() {
                     <ul className="tx-list">
                       {recentTx.map((tx) => (
                         <li key={tx.id} className="tx-item">
-                          <div className="tx-icon">{tx.category.icon}</div>
+                          <div className="tx-icon">{tx.type === 'TRANSFER' ? '🔁' : tx.category.icon}</div>
                           <div className="tx-info">
                             <div className="tx-desc">{tx.description || tx.category.name}</div>
                             <div className="tx-meta">
@@ -210,7 +219,7 @@ export default function DashboardPage() {
                             </div>
                           </div>
                           <div className={`tx-amount ${tx.type.toLowerCase()}`}>
-                            {tx.type === 'EXPENSE' ? '-' : '+'}{formatCAD(tx.amount)}
+                            {tx.type === 'EXPENSE' ? '-' : tx.type === 'INCOME' ? '+' : ''}{formatCAD(tx.amount)}
                           </div>
                         </li>
                       ))}
