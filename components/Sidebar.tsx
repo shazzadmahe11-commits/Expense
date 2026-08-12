@@ -10,6 +10,7 @@ const navItems = [
   { href: '/transactions', icon: '↕', label: 'Transactions' },
   { href: '/cards', icon: '▣', label: 'Cards' },
   { href: '/categories', icon: '◈', label: 'Categories' },
+  { href: '/investments', icon: '📈', label: 'Investments' },
 ];
 
 export default function Sidebar() {
