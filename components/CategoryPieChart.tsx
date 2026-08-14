@@ -19,15 +19,13 @@ function truncate(name: string, max: number) {
 
 const RADIAN = Math.PI / 180;
 
-// Label sits just outside the ring with a short leader line back to the slice,
-// instead of being crammed inside the (thin) donut band.
+// Label sits just outside the ring with a short leader line back to the slice.
 const renderOuterLabel = (props: {
   cx?: number; cy?: number; midAngle?: number;
   innerRadius?: number; outerRadius?: number; percent?: number;
   name?: string;
 }) => {
   const { cx = 0, cy = 0, midAngle = 0, outerRadius = 0, percent = 0, name = '' } = props;
-  if (percent < 0.05) return null;
 
   const lineStart = outerRadius + 6;
   const lineEnd = outerRadius + 14;
@@ -49,11 +47,13 @@ const renderOuterLabel = (props: {
         y={yText}
         textAnchor={isRight ? 'start' : 'end'}
         dominantBaseline="central"
-        fontSize={10.5}
-        fontWeight={600}
-        fill="var(--text-secondary)"
       >
-        {truncate(name, 14)}
+        <tspan fontSize={10.5} fontWeight={600} fill="var(--text-secondary)">
+          {truncate(name, 13)}
+        </tspan>
+        <tspan fontSize={9.5} fontWeight={500} fill="var(--text-muted)" dx={4}>
+          {(percent * 100).toFixed(0)}%
+        </tspan>
       </text>
     </g>
   );
@@ -68,29 +68,30 @@ export default function CategoryPieChart({ data, total }: Props) {
   }));
 
   return (
-    <div>
-      <ResponsiveContainer width="100%" height={260}>
-        <PieChart margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
+    <div style={{ WebkitTapHighlightColor: 'transparent' }}>
+      <ResponsiveContainer width="100%" height={280}>
+        <PieChart margin={{ top: 24, right: 46, bottom: 24, left: 46 }}>
           <Pie
             data={chartData}
             cx="50%"
             cy="50%"
-            innerRadius={50}
-            outerRadius={78}
+            innerRadius={48}
+            outerRadius={74}
             paddingAngle={2}
             dataKey="value"
             labelLine={false}
             label={renderOuterLabel}
             isAnimationActive={false}
+            style={{ outline: 'none' }}
           >
             {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+              <Cell key={`cell-${index}`} fill={entry.color} stroke="none" style={{ outline: 'none' }} />
             ))}
           </Pie>
         </PieChart>
       </ResponsiveContainer>
 
-      {/* Legend — exact amounts/percentages that don't fit on the chart itself */}
+      {/* Legend — exact dollar amounts */}
       <div className="chart-legend">
         {data.map((item) => (
           <div key={item.category.id} className="legend-item">
