@@ -10,8 +10,8 @@ export async function GET(req: NextRequest) {
   const year = parseInt(searchParams.get('year') || String(new Date().getFullYear()));
   const month = parseInt(searchParams.get('month') || String(new Date().getMonth()));
 
-  const start = new Date(year, month, 1);
-  const end = new Date(year, month + 1, 0, 23, 59, 59, 999);
+  const start = new Date(Date.UTC(year, month, 1));
+  const end = new Date(Date.UTC(year, month + 1, 0, 23, 59, 59, 999));
 
   // Monthly transactions — powers the "this month" figures (Total Spent,
   // Total Income, category breakdown) which are meant to reset every month.
