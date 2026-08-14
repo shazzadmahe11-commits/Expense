@@ -860,6 +860,14 @@ body {
 }
 
 /* ===== PIE CHART ===== */
+.recharts-wrapper, .recharts-surface, .recharts-pie, .recharts-pie-sector, .recharts-sector {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+.recharts-sector:focus, .recharts-pie-sector:focus {
+  outline: none;
+}
+
 .chart-legend {
   display: flex;
   flex-direction: column;
