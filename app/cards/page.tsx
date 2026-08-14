@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { formatCAD, CARD_COLORS } from '@/lib/utils';
+import { formatCAD, CARD_COLORS, todayLocalISO } from '@/lib/utils';
 
 interface Card {
   id: string; name: string; type: string; color: string; limit: number | null;
@@ -19,7 +19,7 @@ export default function CardsPage() {
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [transferForm, setTransferForm] = useState({
     fromCardId: '', toCardId: '', amount: '',
-    date: new Date().toISOString().split('T')[0], description: '',
+    date: todayLocalISO(), description: '',
   });
   const [transferSubmitting, setTransferSubmitting] = useState(false);
   const [transferError, setTransferError] = useState<string | null>(null);
@@ -79,7 +79,7 @@ export default function CardsPage() {
       fromCardId: cards.find(c => c.type === 'DEBIT')?.id || cards[0]?.id || '',
       toCardId: cards.find(c => c.type === 'CREDIT')?.id || '',
       amount: '',
-      date: new Date().toISOString().split('T')[0],
+      date: todayLocalISO(),
       description: '',
     });
     setShowTransferModal(true);
