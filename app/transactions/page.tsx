@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { formatCAD, formatDate, formatMonth, CARD_COLORS, CATEGORY_COLORS } from '@/lib/utils';
+import { formatCAD, formatDate, formatMonth, todayLocalISO, CARD_COLORS, CATEGORY_COLORS } from '@/lib/utils';
 
 interface Card { id: string; name: string; type: string; color: string; limit: number | null; }
 interface Category { id: string; name: string; icon: string; color: string; }
@@ -26,7 +26,7 @@ export default function TransactionsPage() {
 
   // Form state
   const [form, setForm] = useState({
-    amount: '', type: 'EXPENSE', description: '', date: now.toISOString().split('T')[0],
+    amount: '', type: 'EXPENSE', description: '', date: todayLocalISO(),
     cardId: '', categoryId: '',
   });
   const [submitting, setSubmitting] = useState(false);
@@ -56,7 +56,7 @@ export default function TransactionsPage() {
 
   const openAdd = () => {
     setEditTx(null);
-    setForm({ amount: '', type: 'EXPENSE', description: '', date: now.toISOString().split('T')[0], cardId: '', categoryId: '' });
+    setForm({ amount: '', type: 'EXPENSE', description: '', date: todayLocalISO(), cardId: '', categoryId: '' });
     setShowModal(true);
   };
 
@@ -93,7 +93,7 @@ export default function TransactionsPage() {
     setSubmitting(false);
     setShowModal(false);
     setEditTx(null);
-    setForm({ amount: '', type: 'EXPENSE', description: '', date: now.toISOString().split('T')[0], cardId: '', categoryId: '' });
+    setForm({ amount: '', type: 'EXPENSE', description: '', date: todayLocalISO(), cardId: '', categoryId: '' });
     loadAll();
   };
 
