@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { formatCAD, formatMonth, formatDate } from '@/lib/utils';
+import { formatCAD, formatMonth, formatDate, todayLocalISO } from '@/lib/utils';
 import CategoryPieChart from '@/components/CategoryPieChart';
 
 interface CardBreakdownItem {
@@ -50,7 +50,7 @@ export default function DashboardPage() {
 
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({
-    amount: '', type: 'EXPENSE', description: '', date: now.toISOString().split('T')[0],
+    amount: '', type: 'EXPENSE', description: '', date: todayLocalISO(),
     cardId: '', categoryId: '',
   });
   const [submitting, setSubmitting] = useState(false);
@@ -78,7 +78,7 @@ export default function DashboardPage() {
   useEffect(() => { load(); }, [load]);
 
   const openAdd = () => {
-    setForm({ amount: '', type: 'EXPENSE', description: '', date: now.toISOString().split('T')[0], cardId: '', categoryId: '' });
+    setForm({ amount: '', type: 'EXPENSE', description: '', date: todayLocalISO(), cardId: '', categoryId: '' });
     setShowModal(true);
   };
 
