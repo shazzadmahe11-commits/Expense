@@ -14,8 +14,8 @@ export async function GET(req: NextRequest) {
   const categoryId = searchParams.get('categoryId');
   const type = searchParams.get('type');
 
-  const start = new Date(year, month, 1);
-  const end = new Date(year, month + 1, 0, 23, 59, 59, 999);
+  const start = new Date(Date.UTC(year, month, 1));
+  const end = new Date(Date.UTC(year, month + 1, 0, 23, 59, 59, 999));
 
   const where: Record<string, unknown> = {
     userId,
