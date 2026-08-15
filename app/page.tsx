@@ -137,31 +137,42 @@ export default function DashboardPage() {
           <div className="loading">Loading...</div>
         ) : summary ? (
           <>
-            {/* Summary Stats */}
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-label">Total Spent</div>
-                <div className="stat-value red">{formatCAD(summary.totalExpenses)}</div>
-                <div className="stat-sub">{summary.transactionCount} transactions</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-label">Total Income</div>
-                <div className="stat-value green">{formatCAD(summary.totalIncome)}</div>
-                <div className="stat-sub">This month</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-label">Net Amount</div>
-                <div className={`stat-value ${summary.netAmount >= 0 ? 'green' : 'red'}`}>
-                  {formatCAD(summary.netAmount)}
+            {/* Hero: Net Amount */}
+            <div className="hero-card">
+              <div className="hero-top">
+                <div>
+                  <div className="hero-label">Net Amount</div>
+                  <div className="hero-value">{formatCAD(summary.netAmount)}</div>
                 </div>
-                <div className="stat-sub">
-                  All time · {summary.netAmount >= 0 ? 'Positive balance ✓' : 'Over budget'}
+                <div className="hero-badge">
+                  {summary.netAmount >= 0 ? '✓ Positive' : '⚠ Over budget'}
                 </div>
               </div>
-              <a href="/investments" className="stat-card" style={{ textDecoration: 'none', display: 'block' }}>
-                <div className="stat-label">Total Invested</div>
-                <div className="stat-value" style={{ color: 'var(--blue)' }}>{formatCAD(totalInvested)}</div>
-                <div className="stat-sub">View investments →</div>
+              <div className="hero-sub">All time · {formatMonth(new Date(year, month, 1))} activity below</div>
+            </div>
+
+            {/* Money summary row */}
+            <div className="money-summary-card">
+              <div className="money-summary-item">
+                <div className="money-summary-icon down">↓</div>
+                <div>
+                  <div className="money-summary-label">Spent</div>
+                  <div className="money-summary-value">{formatCAD(summary.totalExpenses)}</div>
+                </div>
+              </div>
+              <div className="money-summary-item">
+                <div className="money-summary-icon up">↑</div>
+                <div>
+                  <div className="money-summary-label">Income</div>
+                  <div className="money-summary-value">{formatCAD(summary.totalIncome)}</div>
+                </div>
+              </div>
+              <a href="/investments" className="money-summary-item" style={{ textDecoration: 'none' }}>
+                <div className="money-summary-icon invest">📈</div>
+                <div>
+                  <div className="money-summary-label">Invested</div>
+                  <div className="money-summary-value">{formatCAD(totalInvested)}</div>
+                </div>
               </a>
             </div>
 
