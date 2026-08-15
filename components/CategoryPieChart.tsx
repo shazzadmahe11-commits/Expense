@@ -69,44 +69,67 @@ export default function CategoryPieChart({ data, total }: Props) {
 
   return (
     <div style={{ WebkitTapHighlightColor: 'transparent' }}>
-      <ResponsiveContainer width="100%" height={280}>
-        <PieChart margin={{ top: 24, right: 46, bottom: 24, left: 46 }}>
-          <Pie
-            data={chartData}
-            cx="50%"
-            cy="50%"
-            innerRadius={48}
-            outerRadius={74}
-            paddingAngle={2}
-            dataKey="value"
-            labelLine={false}
-            label={renderOuterLabel}
-            isAnimationActive={false}
-            style={{ outline: 'none' }}
-          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} stroke="none" style={{ outline: 'none' }} />
-            ))}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
+      <div style={{ position: 'relative' }}>
+        <ResponsiveContainer width="100%" height={280}>
+          <PieChart margin={{ top: 24, right: 46, bottom: 24, left: 46 }}>
+            <Pie
+              data={chartData}
+              cx="50%"
+              cy="50%"
+              innerRadius={48}
+              outerRadius={74}
+              paddingAngle={2}
+              dataKey="value"
+              labelLine={false}
+              label={renderOuterLabel}
+              isAnimationActive={false}
+              style={{ outline: 'none' }}
+            >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} stroke="none" style={{ outline: 'none' }} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
 
-      {/* Legend — exact dollar amounts */}
+        {/* Center total — sits in the donut hole */}
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          textAlign: 'center', pointerEvents: 'none', width: 100,
+        }}>
+          <div style={{ fontSize: 9.5, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.4 }}>
+            Total
+          </div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: -0.3, marginTop: 2 }}>
+            {formatCAD(total)}
+          </div>
+        </div>
+      </div>
+
+      {/* Legend — exact dollar amounts with a share-of-total progress bar */}
       <div className="chart-legend">
-        {data.map((item) => (
-          <div key={item.category.id} className="legend-item">
-            <div className="legend-left">
-              <div className="color-dot" style={{ background: item.category.color }} />
-              <span>{item.category.icon} {item.category.name}</span>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div className="legend-value">{formatCAD(item.total)}</div>
-              <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>
-                {total > 0 ? `${((item.total / total) * 100).toFixed(1)}%` : '0%'}
+        {data.map((item) => {
+          const pct = total > 0 ? (item.total / total) * 100 : 0;
+          return (
+            <div key={item.category.id} className="legend-item">
+              <div className="legend-item-top">
+                <div className="legend-left">
+                  <div className="color-dot" style={{ background: item.category.color }} />
+                  <span>{item.category.icon} {item.category.name}</span>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <span className="legend-value">{formatCAD(item.total)}</span>
+                  <span style={{ fontSize: 10, color: 'var(--text-muted)', marginLeft: 6 }}>
+                    {pct.toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: `${Math.min(pct, 100)}%`, background: item.category.color }} />
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
