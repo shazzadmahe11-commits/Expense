@@ -74,11 +74,13 @@ export default function InvestmentsPage() {
       </div>
 
       <div className="page-body">
-        <div className="stats-grid" style={{ gridTemplateColumns: '1fr', marginBottom: 20 }}>
-          <div className="stat-card">
-            <div className="stat-label">Total Invested</div>
-            <div className="stat-value" style={{ color: 'var(--blue)' }}>{formatCAD(total)}</div>
-            <div className="stat-sub">{investments.length} holding{investments.length !== 1 ? 's' : ''}</div>
+        <div className="hero-card">
+          <div className="hero-top">
+            <div>
+              <div className="hero-label">Total Invested</div>
+              <div className="hero-value">{formatCAD(total)}</div>
+            </div>
+            <div className="hero-badge">📈 {investments.length} holding{investments.length !== 1 ? 's' : ''}</div>
           </div>
         </div>
 
