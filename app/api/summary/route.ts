@@ -36,11 +36,10 @@ export async function GET(req: NextRequest) {
   }
   const categoryBreakdown = Object.values(categoryMap).sort((a, b) => b.total - a.total);
 
-  // All-time transactions — powers Net Amount and the per-card totals, which
-  // should keep accumulating rather than reset when the month changes.
+  // All-time transactions — powers Net Amount only, which is meant to keep
+  // accumulating rather than reset when the month changes.
   const allTransactions = await prisma.transaction.findMany({
     where: { userId },
-    include: { card: true },
   });
 
   const totalExpensesAllTime = allTransactions
@@ -51,8 +50,11 @@ export async function GET(req: NextRequest) {
     .reduce((sum, t) => sum + t.amount, 0);
   const netAmount = totalIncomeAllTime - totalExpensesAllTime;
 
+  // Card breakdown is scoped to the selected month, same as category
+  // breakdown — shows what happened on each card *this month*, not a
+  // running lifetime total.
   const cardMap: Record<string, { card: { id: string; name: string; color: string; type: string; limit: number | null }; expenses: number; income: number; transferred: number }> = {};
-  for (const tx of allTransactions) {
+  for (const tx of monthTransactions) {
     if (!cardMap[tx.cardId]) {
       cardMap[tx.cardId] = { card: tx.card, expenses: 0, income: 0, transferred: 0 };
     }
