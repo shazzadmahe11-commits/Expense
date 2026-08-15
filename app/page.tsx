@@ -189,7 +189,7 @@ export default function DashboardPage() {
               <div className="card">
                 <div className="card-header">
                   <span className="card-title">Card Spending</span>
-                  <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>All time</span>
+                  <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>This month</span>
                 </div>
                 <div className="card-body" style={{ padding: 0 }}>
                   {summary.cardBreakdown.length > 0 ? (
