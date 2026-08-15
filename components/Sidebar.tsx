@@ -35,10 +35,10 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <div>
+        <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
           <h1>Gorib</h1>
           <p>Personal Finance Tracker</p>
-        </div>
+        </Link>
         <ThemeToggle />
       </div>
       <nav className="sidebar-nav">
