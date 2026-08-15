@@ -133,7 +133,7 @@ export default function CardsPage() {
           <div className="cards-grid">
             {cards.map((card) => (
               <div key={card.id} className="payment-card" style={{ '--card-color': card.color } as React.CSSProperties}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: card.color, borderRadius: '12px 12px 0 0' }} />
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: card.color, borderRadius: '26px 26px 0 0' }} />
                 <div className="payment-card-header">
                   <div>
                     <div className="payment-card-name">{card.name}</div>
