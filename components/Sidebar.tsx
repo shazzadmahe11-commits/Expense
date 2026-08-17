@@ -4,13 +4,14 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import ThemeToggle from '@/components/ThemeToggle';
+import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, LogOut } from 'lucide-react';
 
 const navItems = [
-  { href: '/', icon: '◉', label: 'Dashboard' },
-  { href: '/transactions', icon: '↕', label: 'Transactions' },
-  { href: '/cards', icon: '▣', label: 'Cards' },
-  { href: '/categories', icon: '◈', label: 'Categories' },
-  { href: '/investments', icon: '📈', label: 'Investments' },
+  { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/transactions', icon: ArrowLeftRight, label: 'Transactions' },
+  { href: '/cards', icon: CreditCard, label: 'Cards' },
+  { href: '/categories', icon: Tags, label: 'Categories' },
+  { href: '/investments', icon: TrendingUp, label: 'Investments' },
 ];
 
 export default function Sidebar() {
@@ -43,16 +44,19 @@ export default function Sidebar() {
       </div>
       <nav className="sidebar-nav">
         <div className="nav-label">Menu</div>
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`nav-link${pathname === item.href ? ' active' : ''}`}
-          >
-            <span className="nav-icon">{item.icon}</span>
-            {item.label}
-          </Link>
-        ))}
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`nav-link${pathname === item.href ? ' active' : ''}`}
+            >
+              <span className="nav-icon"><Icon size={17} strokeWidth={2} /></span>
+              {item.label}
+            </Link>
+          );
+        })}
       </nav>
       <div style={{ marginTop: 'auto', padding: '16px 20px', borderTop: '1px solid var(--border-light)' }}>
         {email && (
@@ -60,8 +64,8 @@ export default function Sidebar() {
             {email}
           </div>
         )}
-        <button className="btn btn-secondary btn-sm" style={{ width: '100%' }} onClick={handleLogout}>
-          Log out
+        <button className="btn btn-secondary btn-sm" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }} onClick={handleLogout}>
+          <LogOut size={14} /> Log out
         </button>
       </div>
     </aside>
