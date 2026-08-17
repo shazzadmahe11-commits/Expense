@@ -114,7 +114,7 @@ export default function DashboardPage() {
             <h2 className="page-title">Dashboard</h2>
             <p className="page-subtitle">Your monthly spending overview</p>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div className="dashboard-header-actions">
             <div className="month-picker">
               <button className="month-btn" onClick={prevMonth} id="prev-month-btn" aria-label="Previous month">‹</button>
               <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
