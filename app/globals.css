@@ -88,7 +88,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg-gradient);
   background-attachment: fixed;
   color: var(--text-primary);
@@ -178,9 +178,12 @@ body {
 }
 
 .nav-link .nav-icon {
-  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 20px;
-  text-align: center;
+  flex-shrink: 0;
+  color: currentColor;
 }
 
 .main-content {
@@ -422,6 +425,12 @@ body {
 }
 
 /* ===== MONTH PICKER ===== */
+.dashboard-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .month-picker {
   display: flex;
   align-items: center;
@@ -1099,7 +1108,9 @@ body {
   background: none;
   border: none;
   color: var(--text-primary);
-  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
   padding: 6px;
   margin-left: -6px;
@@ -1204,9 +1215,12 @@ body {
 }
 
 .mobile-drawer-link .drawer-icon {
-  font-size: 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 22px;
-  text-align: center;
+  flex-shrink: 0;
+  color: currentColor;
 }
 
 .mobile-drawer-link.active {
@@ -1265,6 +1279,11 @@ body {
   
   .page-header {
     padding: 20px 16px 0;
+  }
+
+  .dashboard-header-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .page-body {
