@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { formatCAD, BROKERS } from '@/lib/utils';
+import { TrendingUp } from 'lucide-react';
 
 interface Investment {
   id: string; broker: string; stock: string; amount: number; createdAt: string;
@@ -80,7 +81,7 @@ export default function InvestmentsPage() {
               <div className="hero-label">Total Invested</div>
               <div className="hero-value">{formatCAD(total)}</div>
             </div>
-            <div className="hero-badge">📈 {investments.length} holding{investments.length !== 1 ? 's' : ''}</div>
+            <div className="hero-badge"><TrendingUp size={13} /> {investments.length} holding{investments.length !== 1 ? 's' : ''}</div>
           </div>
         </div>
 
@@ -124,7 +125,7 @@ export default function InvestmentsPage() {
                 {investments.map((inv) => (
                   <div key={inv.id} className="tx-row">
                     <div className="tx-row-main">
-                      <div className="tx-row-icon">📈</div>
+                      <div className="tx-row-icon"><TrendingUp size={16} /></div>
                       <div className="tx-row-info">
                         <div className="tx-row-title">{inv.stock}</div>
                         <div className="tx-row-sub">{inv.broker}</div>
@@ -141,7 +142,7 @@ export default function InvestmentsPage() {
             </>
           ) : (
             <div className="empty-state">
-              <div className="empty-icon">📈</div>
+              <div className="empty-icon"><TrendingUp size={32} /></div>
               <div className="empty-title">No investments yet</div>
               <div className="empty-desc">Add your first holding using the + Add Investment button</div>
             </div>
