@@ -13,12 +13,17 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Gorib.com',
   description: 'Track your monthly expenses, card spending, and net amount.',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/apple-icon.png',
+  },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  themeColor: '#16a34a',
 };
 
 export default function RootLayout({
