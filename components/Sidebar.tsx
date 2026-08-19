@@ -36,9 +36,12 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <h1>Gorib.com</h1>
-          <p>Personal Finance Tracker</p>
+        <Link href="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <img src="/logo.svg" alt="" width={34} height={34} style={{ borderRadius: 9, flexShrink: 0 }} />
+          <div>
+            <h1>Gorib.com</h1>
+            <p>Personal Finance Tracker</p>
+          </div>
         </Link>
         <ThemeToggle />
       </div>
