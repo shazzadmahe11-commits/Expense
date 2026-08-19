@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { formatCAD, formatMonth, formatDate, todayLocalISO } from '@/lib/utils';
 import CategoryPieChart from '@/components/CategoryPieChart';
+import { TrendingUp } from 'lucide-react';
 
 interface CardBreakdownItem {
   card: { id: string; name: string; color: string; type: string; limit: number | null };
@@ -168,7 +169,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               <a href="/investments" className="money-summary-item" style={{ textDecoration: 'none' }}>
-                <div className="money-summary-icon invest">📈</div>
+                <div className="money-summary-icon invest"><TrendingUp size={16} /></div>
                 <div>
                   <div className="money-summary-label">Invested</div>
                   <div className="money-summary-value">{formatCAD(totalInvested)}</div>
