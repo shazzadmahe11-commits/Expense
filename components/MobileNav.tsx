@@ -44,7 +44,7 @@ export default function MobileNav() {
         <button className="mobile-topbar-btn" onClick={() => setOpen(true)} aria-label="Open menu">
           <Menu size={22} />
         </button>
-        <Link href="/" className="mobile-topbar-title" style={{ flex: 1, textDecoration: 'none' }}>Gorib</Link>
+        <Link href="/" className="mobile-topbar-title" style={{ flex: 1, textDecoration: 'none' }}>Gorib.com</Link>
         <ThemeToggle />
       </header>
 
@@ -54,7 +54,7 @@ export default function MobileNav() {
         <div className="mobile-drawer-header">
           <div>
             <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div className="mobile-drawer-logo">Gorib</div>
+              <div className="mobile-drawer-logo">Gorib.com</div>
             </Link>
             <div className="mobile-drawer-sub">Personal Finance Tracker</div>
           </div>
