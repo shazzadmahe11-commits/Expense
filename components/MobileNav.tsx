@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import ThemeToggle from '@/components/ThemeToggle';
+import { useTransactionModal } from '@/lib/transaction-modal-context';
 import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, Plus, LogOut } from 'lucide-react';
 
 const navItems = [
@@ -16,6 +17,7 @@ const navItems = [
 export default function MobileNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const { openAdd } = useTransactionModal();
 
   if (pathname === '/login') return null;
 
@@ -52,9 +54,9 @@ export default function MobileNav() {
             </Link>
           );
         })}
-        <Link href="/transactions?add=1" className="bottom-nav-fab" aria-label="Add expense">
+        <button type="button" onClick={openAdd} className="bottom-nav-fab" aria-label="Add expense">
           <Plus size={24} strokeWidth={2.5} />
-        </Link>
+        </button>
       </nav>
     </>
   );
