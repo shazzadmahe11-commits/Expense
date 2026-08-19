@@ -44,7 +44,10 @@ export default function MobileNav() {
         <button className="mobile-topbar-btn" onClick={() => setOpen(true)} aria-label="Open menu">
           <Menu size={22} />
         </button>
-        <Link href="/" className="mobile-topbar-title" style={{ flex: 1, textDecoration: 'none' }}>Gorib.com</Link>
+        <Link href="/" className="mobile-topbar-title" style={{ flex: 1, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <img src="/logo.svg" alt="" width={26} height={26} style={{ borderRadius: 7 }} />
+          Gorib.com
+        </Link>
         <ThemeToggle />
       </header>
 
@@ -52,11 +55,14 @@ export default function MobileNav() {
 
       <aside className={`mobile-drawer${open ? ' open' : ''}`}>
         <div className="mobile-drawer-header">
-          <div>
-            <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div className="mobile-drawer-logo">Gorib.com</div>
-            </Link>
-            <div className="mobile-drawer-sub">Personal Finance Tracker</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <img src="/logo.svg" alt="" width={36} height={36} style={{ borderRadius: 10, flexShrink: 0 }} />
+            <div>
+              <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="mobile-drawer-logo">Gorib.com</div>
+              </Link>
+              <div className="mobile-drawer-sub">Personal Finance Tracker</div>
+            </div>
           </div>
           <button className="mobile-drawer-close" onClick={() => setOpen(false)} aria-label="Close menu">
             <X size={18} />
