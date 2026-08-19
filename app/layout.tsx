@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Sidebar from '@/components/Sidebar';
 import MobileNav from '@/components/MobileNav';
+import GlobalAddTransactionModal from '@/components/GlobalAddTransactionModal';
+import { TransactionModalProvider } from '@/lib/transaction-modal-context';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -46,13 +48,16 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <div className="app-layout">
-          <Sidebar />
-          <main className="main-content">
-            {children}
-          </main>
-        </div>
-        <MobileNav />
+        <TransactionModalProvider>
+          <div className="app-layout">
+            <Sidebar />
+            <main className="main-content">
+              {children}
+            </main>
+          </div>
+          <MobileNav />
+          <GlobalAddTransactionModal />
+        </TransactionModalProvider>
       </body>
     </html>
   );
