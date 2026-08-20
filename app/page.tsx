@@ -101,16 +101,6 @@ export default function DashboardPage() {
             <p className="page-subtitle">Your monthly spending overview</p>
           </div>
           <div className="dashboard-header-actions">
-            <button
-              type="button"
-              className={`privacy-toggle-btn${hideAmounts ? ' active' : ''}`}
-              onClick={toggleHideAmounts}
-              aria-label={hideAmounts ? 'Show amounts' : 'Hide amounts'}
-              title={hideAmounts ? 'Show amounts' : 'Hide amounts'}
-              id="privacy-toggle-btn"
-            >
-              {hideAmounts ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
             <div className="month-picker">
               <button className="month-btn" onClick={prevMonth} id="prev-month-btn" aria-label="Previous month">‹</button>
               <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
@@ -123,6 +113,16 @@ export default function DashboardPage() {
                 style={{ opacity: isCurrentMonth ? 0.3 : 1, cursor: isCurrentMonth ? 'not-allowed' : 'pointer' }}
               >›</button>
             </div>
+            <button
+              type="button"
+              className={`privacy-toggle-btn${hideAmounts ? ' active' : ''}`}
+              onClick={toggleHideAmounts}
+              aria-label={hideAmounts ? 'Show amounts' : 'Hide amounts'}
+              title={hideAmounts ? 'Show amounts' : 'Hide amounts'}
+              id="privacy-toggle-btn"
+            >
+              {hideAmounts ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
           </div>
         </div>
       </div>
