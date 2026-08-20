@@ -1,10 +1,12 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import ThemeToggle from '@/components/ThemeToggle';
 import { useTransactionModal } from '@/lib/transaction-modal-context';
-import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, Plus, LogOut } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, Plus, LogOut, Info } from 'lucide-react';
+import FeaturesModal from '@/components/FeaturesModal';
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -18,6 +20,7 @@ export default function MobileNav() {
   const pathname = usePathname();
   const router = useRouter();
   const { openAdd } = useTransactionModal();
+  const [showFeatures, setShowFeatures] = useState(false);
 
   if (pathname === '/login') return null;
 
@@ -35,8 +38,18 @@ export default function MobileNav() {
           <img src="/logo.svg" alt="" width={26} height={26} style={{ borderRadius: 7 }} />
           Gorib.com
         </Link>
+        <button
+          type="button"
+          onClick={() => setShowFeatures(true)}
+          aria-label="What can this app do?"
+          style={{ border: 'none', background: 'transparent', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', padding: 6 }}
+        >
+          <Info size={19} strokeWidth={2} />
+        </button>
         <ThemeToggle />
       </header>
+
+      <FeaturesModal open={showFeatures} onClose={() => setShowFeatures(false)} />
 
       <nav className="bottom-nav">
         {navItems.slice(0, 3).map((item) => {
