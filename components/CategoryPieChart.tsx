@@ -107,9 +107,9 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
         </div>
       </div>
 
-      {/* Legend — top row (dollar + %) always matches the pie slice above (share of
-          total spend). The bar below represents budget usage when a category has a
-          budget set, and falls back to share-of-total when it doesn't. */}
+      {/* Legend — the bar represents budget usage when a category has a budget set
+          (with the numbers labeled right on the bar), and falls back to a plain
+          share-of-total bar when it doesn't. */}
       <div className="chart-legend">
         {data.map((item) => {
           const pct = total > 0 ? (item.total / total) * 100 : 0;
@@ -125,24 +125,19 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
                   <div className="color-dot" style={{ background: item.category.color }} />
                   <span>{item.category.icon} {item.category.name}</span>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <span className="legend-value">{formatCAD(item.total)}</span>
-                  <span style={{ fontSize: 10, color: 'var(--text-muted)', marginLeft: 6 }}>
-                    {pct.toFixed(1)}%
-                  </span>
-                </div>
+                <span className="legend-value">{formatCAD(item.total)}</span>
               </div>
               <div className="progress-bar">
                 <div
                   className="progress-fill"
                   style={{ width: `${Math.min(barPct, 100)}%`, background: over ? 'var(--red)' : item.category.color }}
                 />
+                {hasBudget && (
+                  <span className="progress-bar-label">
+                    {over ? '⚠ ' : ''}{formatCAD(item.total)} of {formatCAD(budget)} ({budgetPct}%)
+                  </span>
+                )}
               </div>
-              {hasBudget && (
-                <div className={`category-budget-label${over ? ' over' : ''}`} style={{ marginTop: 4 }}>
-                  {over ? '⚠ ' : ''}{formatCAD(item.total)} of {formatCAD(budget)} budget used ({budgetPct}%)
-                </div>
-              )}
             </div>
           );
         })}
