@@ -11,7 +11,7 @@ const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/transactions', icon: ArrowLeftRight, label: 'Transactions' },
   { href: '/cards', icon: CreditCard, label: 'Cards' },
-  { href: '/categories', icon: Tags, label: 'Categories' },
+  { href: '/categories', icon: Tags, label: 'Budgets' },
   { href: '/investments', icon: TrendingUp, label: 'Investments' },
 ];
 
