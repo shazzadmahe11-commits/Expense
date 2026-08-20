@@ -685,6 +685,7 @@ body {
 /* ===== FORM ===== */
 .form-group {
   margin-bottom: 16px;
+  min-width: 0;
 }
 
 .form-label {
@@ -697,6 +698,7 @@ body {
 
 .form-input, .form-select, .form-textarea {
   width: 100%;
+  min-width: 0;
   padding: 9px 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -1007,9 +1009,7 @@ body {
 
 .filter-select:focus {
   border-color: var(--text-primary);
-}
-
-/* ===== LOADING ===== */
+}/* ===== LOADING ===== */
 .loading {
   display: flex;
   align-items: center;
@@ -1330,7 +1330,30 @@ body {
   .form-row {
     grid-template-columns: 1fr;
   }
-  
+
+  .filters-bar {
+    flex-wrap: nowrap;
+  }
+
+  .filter-select {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 7px 8px;
+    font-size: 12px;
+  }
+
+  .filters-bar .btn {
+    flex-shrink: 0;
+  }
+
+  .modal-footer {
+    justify-content: space-between;
+  }
+
+  .modal-footer .btn {
+    flex: 1;
+  }
+
   .mobile-topbar {
     display: flex;
   }
