@@ -16,6 +16,14 @@ interface CategoryBreakdownItem {
   total: number;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  budget: { amount: number } | null;
+}
+
 interface Summary {
   totalExpenses: number;
   totalIncome: number;
@@ -41,6 +49,7 @@ export default function DashboardPage() {
   const [month, setMonth] = useState(now.getMonth());
   const [summary, setSummary] = useState<Summary | null>(null);
   const [recentTx, setRecentTx] = useState<Transaction[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [totalInvested, setTotalInvested] = useState(0);
   const [loading, setLoading] = useState(true);
   const [hideAmounts, setHideAmounts] = useState(false);
@@ -59,17 +68,20 @@ export default function DashboardPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [sumRes, txRes, invRes] = await Promise.all([
+    const [sumRes, txRes, invRes, catRes] = await Promise.all([
       fetch(`/api/summary?year=${year}&month=${month}`),
       fetch(`/api/transactions?year=${year}&month=${month}`),
       fetch('/api/investments'),
+      fetch('/api/categories'),
     ]);
     const sumData = await sumRes.json();
     const txData = await txRes.json();
     const invData = await invRes.json();
+    const catData = await catRes.json();
     setSummary(sumData);
     setRecentTx(txData.slice(0, 8));
     setTotalInvested(Array.isArray(invData) ? invData.reduce((sum: number, i: { amount: number }) => sum + i.amount, 0) : 0);
+    setCategories(Array.isArray(catData) ? catData : []);
     setLoading(false);
   }, [year, month]);
 
@@ -91,6 +103,19 @@ export default function DashboardPage() {
     else setMonth(m => m + 1);
   };
   const isCurrentMonth = year === now.getFullYear() && month === now.getMonth();
+
+  // Budget vs. actual for the month currently being viewed — categories.spentThisMonth
+  // always reflects the real calendar month, so cross-reference budgets against
+  // summary.categoryBreakdown (which is already scoped to the selected year/month).
+  const budgetItems = categories
+    .filter((c) => c.budget && c.budget.amount > 0)
+    .map((c) => {
+      const spent = summary?.categoryBreakdown.find((b) => b.category.id === c.id)?.total || 0;
+      const amount = c.budget!.amount;
+      const pct = amount > 0 ? (spent / amount) * 100 : 0;
+      return { category: c, spent, amount, pct };
+    })
+    .sort((a, b) => b.pct - a.pct);
 
   return (
     <>
@@ -238,6 +263,48 @@ export default function DashboardPage() {
                   )}
                 </div>
               </div>
+
+              {/* Budget Overview */}
+              {budgetItems.length > 0 && (
+                <div className="card full-width">
+                  <div className="card-header">
+                    <span className="card-title">Budget Overview</span>
+                    <a href="/categories" className="btn btn-ghost btn-sm">Manage →</a>
+                  </div>
+                  <div className="card-body" style={{ padding: 0 }}>
+                    <ul className="tx-list">
+                      {budgetItems.map(({ category, spent, amount, pct }) => {
+                        const over = spent > amount;
+                        const barPct = Math.min(100, Math.round(pct));
+                        return (
+                          <li key={category.id} className="category-item">
+                            <div className="category-icon" style={{ background: category.color + '22' }}>
+                              {category.icon}
+                            </div>
+                            <div className="category-info">
+                              <div className="category-name">{category.name}</div>
+                              <div className="category-budget-row">
+                                <div className="category-budget-bar">
+                                  <div
+                                    className="category-budget-fill"
+                                    style={{ width: `${barPct}%`, background: over ? 'var(--red)' : category.color }}
+                                  />
+                                </div>
+                                <span className={`category-budget-label${over ? ' over' : ''}`}>
+                                  {formatCAD(spent)} of {formatCAD(amount)}
+                                </span>
+                              </div>
+                            </div>
+                            <div className={`category-budget-label${over ? ' over' : ''}`} style={{ fontWeight: 600 }}>
+                              {over ? '⚠ ' : ''}{Math.round(pct)}%
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </div>
+              )}
 
               {/* Recent Transactions */}
               <div className="card full-width">
