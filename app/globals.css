@@ -715,9 +715,15 @@ body {
   box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
+input[type="date"].form-input {
+  -webkit-appearance: none;
+  appearance: none;
+  max-width: 100%;
+}
+
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
 }
 
@@ -1328,22 +1334,30 @@ body {
   }
 
   .form-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .filters-bar {
-    flex-wrap: nowrap;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 6px;
   }
 
   .filter-select {
-    flex: 1 1 0;
+    width: 100%;
     min-width: 0;
-    padding: 7px 8px;
-    font-size: 12px;
+    padding: 7px 6px;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .filters-bar .btn {
-    flex-shrink: 0;
+    padding: 7px 8px;
+    font-size: 11px;
+    white-space: nowrap;
   }
 
   .modal-footer {
