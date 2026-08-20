@@ -11,7 +11,6 @@ interface CategoryItem {
 interface Props {
   data: CategoryItem[];
   total: number;
-  budgets?: Record<string, number>;
 }
 
 function truncate(name: string, max: number) {
@@ -60,7 +59,7 @@ const renderOuterLabel = (props: {
   );
 };
 
-export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
+export default function CategoryPieChart({ data, total }: Props) {
   const chartData = data.map((item) => ({
     name: item.category.name,
     value: item.total,
@@ -107,15 +106,10 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
         </div>
       </div>
 
-      {/* Legend — exact dollar amounts, with budget progress where a budget is set
-          and a share-of-total progress bar otherwise */}
+      {/* Legend — exact dollar amounts with a share-of-total progress bar */}
       <div className="chart-legend">
         {data.map((item) => {
           const pct = total > 0 ? (item.total / total) * 100 : 0;
-          const budget = budgets[item.category.id];
-          const hasBudget = !!budget && budget > 0;
-          const budgetPct = hasBudget ? (item.total / budget) * 100 : 0;
-          const over = hasBudget && item.total > budget;
           return (
             <div key={item.category.id} className="legend-item">
               <div className="legend-item-top">
@@ -125,28 +119,14 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <span className="legend-value">{formatCAD(item.total)}</span>
-                  <span
-                    className={hasBudget && over ? 'category-budget-label over' : undefined}
-                    style={{ fontSize: 10, color: hasBudget && over ? undefined : 'var(--text-muted)', marginLeft: 6, fontWeight: hasBudget && over ? 600 : undefined }}
-                  >
-                    {hasBudget && over ? '⚠ ' : ''}{(hasBudget ? budgetPct : pct).toFixed(0)}%{hasBudget ? ' of budget' : ''}
+                  <span style={{ fontSize: 10, color: 'var(--text-muted)', marginLeft: 6 }}>
+                    {pct.toFixed(1)}%
                   </span>
                 </div>
               </div>
               <div className="progress-bar">
-                <div
-                  className="progress-fill"
-                  style={{
-                    width: `${Math.min(hasBudget ? budgetPct : pct, 100)}%`,
-                    background: over ? 'var(--red)' : item.category.color,
-                  }}
-                />
+                <div className="progress-fill" style={{ width: `${Math.min(pct, 100)}%`, background: item.category.color }} />
               </div>
-              {hasBudget && (
-                <div className={`category-budget-label${over ? ' over' : ''}`} style={{ marginTop: 3 }}>
-                  {formatCAD(item.total)} of {formatCAD(budget)} budget
-                </div>
-              )}
             </div>
           );
         })}
