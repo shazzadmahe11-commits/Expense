@@ -81,8 +81,8 @@ export default function CategoriesPage() {
   return (
     <>
       <div className="page-header">
-        <h2 className="page-title">Categories</h2>
-        <p className="page-subtitle">Organize your expense categories</p>
+        <h2 className="page-title">Budgets</h2>
+        <p className="page-subtitle">Organize your categories and set monthly budgets</p>
       </div>
 
       <div className="page-body">
