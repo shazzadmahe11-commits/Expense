@@ -35,5 +35,21 @@ export async function PATCH(
     where: { id },
     data: { name: body.name, icon: body.icon, color: body.color },
   });
-  return NextResponse.json(category);
+
+  // budgetAmount: a positive number sets/updates the budget; 0, null, or omitted clears it.
+  if ('budgetAmount' in body) {
+    const amount = Number(body.budgetAmount);
+    if (amount && amount > 0) {
+      await prisma.budget.upsert({
+        where: { categoryId: id },
+        update: { amount },
+        create: { userId, categoryId: id, amount },
+      });
+    } else {
+      await prisma.budget.deleteMany({ where: { categoryId: id, userId } });
+    }
+  }
+
+  const withBudget = await prisma.category.findFirst({ where: { id }, include: { budget: true } });
+  return NextResponse.json(withBudget);
 }
