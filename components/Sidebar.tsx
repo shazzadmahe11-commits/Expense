@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import ThemeToggle from '@/components/ThemeToggle';
 import { useTransactionModal } from '@/lib/transaction-modal-context';
-import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, LogOut, Plus } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, LogOut, Plus, Info } from 'lucide-react';
+import FeaturesModal from '@/components/FeaturesModal';
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -20,6 +21,7 @@ export default function Sidebar() {
   const router = useRouter();
   const { openAdd } = useTransactionModal();
   const [email, setEmail] = useState<string | null>(null);
+  const [showFeatures, setShowFeatures] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -86,6 +88,15 @@ export default function Sidebar() {
       </div>
 
       <div className="sidebar-footer">
+        <button
+          type="button"
+          className="nav-link"
+          style={{ width: '100%', border: 'none', background: 'transparent', cursor: 'pointer', marginBottom: 4 }}
+          onClick={() => setShowFeatures(true)}
+        >
+          <span className="nav-icon"><Info size={17} strokeWidth={2} /></span>
+          What can this app do?
+        </button>
         <div className="sidebar-profile">
           <span className="sidebar-avatar">{initials}</span>
           <div className="sidebar-profile-info">
@@ -103,6 +114,8 @@ export default function Sidebar() {
           </button>
         </div>
       </div>
+
+      <FeaturesModal open={showFeatures} onClose={() => setShowFeatures(false)} />
     </aside>
   );
 }
