@@ -153,7 +153,7 @@ export default function DashboardPage() {
         ) : summary ? (
           <>
             {/* Hero: Net Amount */}
-            <div className="hero-card">
+            <div className={`hero-card${summary.netAmount >= 0 ? ' positive' : ' negative'}`}>
               <div className="hero-top">
                 <div>
                   <div className="hero-label">Net Amount</div>
