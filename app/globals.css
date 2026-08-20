@@ -451,7 +451,7 @@ body {
   border-radius: var(--radius-lg);
   padding: 26px 24px;
   margin-bottom: 16px;
-  box-shadow: 0 8px 28px rgba(16, 185, 129, 0.28);
+  box-shadow: 0 8px 28px rgba(var(--accent-rgb), 0.28);
 }
 
 .hero-card::before {
@@ -762,7 +762,7 @@ body {
 .btn-primary {
   background: var(--accent-gradient);
   color: white;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.35);
 }
 
 .btn-primary:hover {
