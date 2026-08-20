@@ -52,11 +52,11 @@ export default function Sidebar() {
         <button
           type="button"
           onClick={openAdd}
-          className="btn btn-primary"
+          className="sidebar-add-btn"
           id="sidebar-add-transaction-btn"
-          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 16 }}
         >
-          <Plus size={15} strokeWidth={2.5} /> Add Transaction
+          <span className="sidebar-add-btn-icon"><Plus size={15} strokeWidth={2.5} /></span>
+          Add Transaction
         </button>
         {navItems.map((item) => {
           const Icon = item.icon;
