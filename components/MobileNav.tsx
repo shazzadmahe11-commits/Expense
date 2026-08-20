@@ -36,13 +36,10 @@ export default function MobileNav() {
           Gorib.com
         </Link>
         <ThemeToggle />
-        <button className="mobile-topbar-btn" onClick={handleLogout} aria-label="Log out">
-          <LogOut size={19} />
-        </button>
       </header>
 
       <nav className="bottom-nav">
-        {navItems.slice(0, 2).map((item) => {
+        {navItems.slice(0, 3).map((item) => {
           const Icon = item.icon;
           return (
             <Link
@@ -57,7 +54,7 @@ export default function MobileNav() {
         <button type="button" onClick={openAdd} className="bottom-nav-fab" aria-label="Add expense">
           <Plus size={26} strokeWidth={2.5} />
         </button>
-        {navItems.slice(2).map((item) => {
+        {navItems.slice(3).map((item) => {
           const Icon = item.icon;
           return (
             <Link
@@ -69,6 +66,9 @@ export default function MobileNav() {
             </Link>
           );
         })}
+        <button type="button" onClick={handleLogout} className="bottom-nav-link" aria-label="Log out">
+          <LogOut size={20} strokeWidth={2} />
+        </button>
       </nav>
     </>
   );
