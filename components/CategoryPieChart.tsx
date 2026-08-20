@@ -107,9 +107,9 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
         </div>
       </div>
 
-      {/* Legend — bar and % always match the pie slice above (share of total spend).
-          Budget status is shown as a separate line underneath, so the two numbers
-          never contradict each other. */}
+      {/* Legend — top row (dollar + %) always matches the pie slice above (share of
+          total spend). The bar below represents budget usage when a category has a
+          budget set, and falls back to share-of-total when it doesn't. */}
       <div className="chart-legend">
         {data.map((item) => {
           const pct = total > 0 ? (item.total / total) * 100 : 0;
@@ -117,6 +117,7 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
           const hasBudget = !!budget && budget > 0;
           const budgetPct = hasBudget ? Math.round((item.total / budget) * 100) : 0;
           const over = hasBudget && item.total > budget;
+          const barPct = hasBudget ? budgetPct : pct;
           return (
             <div key={item.category.id} className="legend-item">
               <div className="legend-item-top">
@@ -132,7 +133,10 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
                 </div>
               </div>
               <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${Math.min(pct, 100)}%`, background: item.category.color }} />
+                <div
+                  className="progress-fill"
+                  style={{ width: `${Math.min(barPct, 100)}%`, background: over ? 'var(--red)' : item.category.color }}
+                />
               </div>
               {hasBudget && (
                 <div className={`category-budget-label${over ? ' over' : ''}`} style={{ marginTop: 4 }}>
