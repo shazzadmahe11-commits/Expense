@@ -4,7 +4,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import ThemeToggle from '@/components/ThemeToggle';
-import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, LogOut } from 'lucide-react';
+import { useTransactionModal } from '@/lib/transaction-modal-context';
+import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, LogOut, Plus } from 'lucide-react';
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -17,6 +18,7 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { openAdd } = useTransactionModal();
   const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
@@ -47,6 +49,15 @@ export default function Sidebar() {
       </div>
       <nav className="sidebar-nav">
         <div className="nav-label">Menu</div>
+        <button
+          type="button"
+          onClick={openAdd}
+          className="btn btn-primary"
+          id="sidebar-add-transaction-btn"
+          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 16 }}
+        >
+          <Plus size={15} strokeWidth={2.5} /> Add Transaction
+        </button>
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
