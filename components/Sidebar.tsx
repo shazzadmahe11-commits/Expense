@@ -35,6 +35,8 @@ export default function Sidebar() {
     router.refresh();
   };
 
+  const initials = email ? email.slice(0, 2).toUpperCase() : '?';
+
   return (
     <aside className="sidebar">
       <div className="sidebar-logo" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
@@ -47,40 +49,59 @@ export default function Sidebar() {
         </Link>
         <ThemeToggle />
       </div>
-      <nav className="sidebar-nav">
-        <div className="nav-label">Menu</div>
-        <button
-          type="button"
-          onClick={openAdd}
-          className="sidebar-add-btn"
-          id="sidebar-add-transaction-btn"
-        >
-          <span className="sidebar-add-btn-icon"><Plus size={15} strokeWidth={2.5} /></span>
-          Add Transaction
-        </button>
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`nav-link${pathname === item.href ? ' active' : ''}`}
-            >
-              <span className="nav-icon"><Icon size={17} strokeWidth={2} /></span>
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-      <div style={{ marginTop: 'auto', padding: '16px 20px', borderTop: '1px solid var(--border-light)' }}>
-        {email && (
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {email}
+
+      <div className="sidebar-body">
+        <div className="sidebar-cta-wrap">
+          <button
+            type="button"
+            onClick={openAdd}
+            className="sidebar-add-btn"
+            id="sidebar-add-transaction-btn"
+          >
+            <span className="sidebar-add-btn-icon"><Plus size={15} strokeWidth={2.5} /></span>
+            Add Transaction
+          </button>
+        </div>
+
+        <div className="sidebar-divider" />
+
+        <nav className="sidebar-nav">
+          <div className="nav-section-label">Menu</div>
+          <div className="nav-group">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`nav-link${pathname === item.href ? ' active' : ''}`}
+                >
+                  <span className="nav-icon"><Icon size={17} strokeWidth={2} /></span>
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
-        )}
-        <button className="btn btn-secondary btn-sm" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }} onClick={handleLogout}>
-          <LogOut size={14} /> Log out
-        </button>
+        </nav>
+      </div>
+
+      <div className="sidebar-footer">
+        <div className="sidebar-profile">
+          <span className="sidebar-avatar">{initials}</span>
+          <div className="sidebar-profile-info">
+            <div className="sidebar-profile-email">{email ?? 'Signed out'}</div>
+            <div className="sidebar-profile-sub">Account</div>
+          </div>
+          <button
+            type="button"
+            className="sidebar-logout-btn"
+            onClick={handleLogout}
+            aria-label="Log out"
+            title="Log out"
+          >
+            <LogOut size={15} />
+          </button>
+        </div>
       </div>
     </aside>
   );
