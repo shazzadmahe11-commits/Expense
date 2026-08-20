@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       card: true,
       category: true,
     },
-    orderBy: { date: 'desc' },
+    orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
   });
 
   return NextResponse.json(transactions);
