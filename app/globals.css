@@ -621,6 +621,39 @@ body {
   letter-spacing: -0.2px;
 }
 
+.privacy-toggle-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.privacy-toggle-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.privacy-toggle-btn.active {
+  background: var(--accent-light);
+  color: var(--accent-solid);
+  border-color: var(--accent-solid);
+}
+
+.blur-amount {
+  filter: blur(6px);
+  user-select: none;
+  transition: filter 0.15s ease;
+}
+
 /* ===== DASHBOARD GRID ===== */
 .dashboard-grid {
   display: grid;
@@ -1396,15 +1429,46 @@ input[type="date"].form-input {
   .dashboard-header-actions {
     width: 100%;
     justify-content: space-between;
-  }
-
-  .month-picker {
-    width: 100%;
-    justify-content: space-between;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 8px 12px;
+    padding: 8px 8px 8px 12px;
+    gap: 6px;
+  }
+
+  .month-picker {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    justify-content: space-between;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .privacy-toggle-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .privacy-toggle-btn::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+  }
+
+  .privacy-toggle-btn.active {
+    background: var(--accent-light);
+    border-radius: 6px;
   }
 
   .month-btn {
@@ -1618,37 +1682,4 @@ input[type="date"].form-input {
   height: 1px;
   background: var(--border);
   margin: 16px 0;
-}
-
-.privacy-toggle-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-  flex-shrink: 0;
-}
-
-.privacy-toggle-btn:hover {
-  background: var(--surface-hover);
-  color: var(--text-primary);
-  border-color: var(--border-strong);
-}
-
-.privacy-toggle-btn.active {
-  background: var(--accent-light);
-  color: var(--accent-solid);
-  border-color: var(--accent-solid);
-}
-
-.blur-amount {
-  filter: blur(6px);
-  user-select: none;
-  transition: filter 0.15s ease;
 }
