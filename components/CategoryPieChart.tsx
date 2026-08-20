@@ -125,8 +125,11 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <span className="legend-value">{formatCAD(item.total)}</span>
-                  <span style={{ fontSize: 10, color: 'var(--text-muted)', marginLeft: 6 }}>
-                    {pct.toFixed(1)}%
+                  <span
+                    className={hasBudget && over ? 'category-budget-label over' : undefined}
+                    style={{ fontSize: 10, color: hasBudget && over ? undefined : 'var(--text-muted)', marginLeft: 6, fontWeight: hasBudget && over ? 600 : undefined }}
+                  >
+                    {hasBudget && over ? '⚠ ' : ''}{(hasBudget ? budgetPct : pct).toFixed(0)}%{hasBudget ? ' of budget' : ''}
                   </span>
                 </div>
               </div>
@@ -141,7 +144,7 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
               </div>
               {hasBudget && (
                 <div className={`category-budget-label${over ? ' over' : ''}`} style={{ marginTop: 3 }}>
-                  {over ? '⚠ ' : ''}{formatCAD(item.total)} of {formatCAD(budget)} budget
+                  {formatCAD(item.total)} of {formatCAD(budget)} budget
                 </div>
               )}
             </div>
