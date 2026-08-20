@@ -11,6 +11,7 @@ interface CategoryItem {
 interface Props {
   data: CategoryItem[];
   total: number;
+  budgets?: Record<string, number>;
 }
 
 function truncate(name: string, max: number) {
@@ -59,7 +60,7 @@ const renderOuterLabel = (props: {
   );
 };
 
-export default function CategoryPieChart({ data, total }: Props) {
+export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
   const chartData = data.map((item) => ({
     name: item.category.name,
     value: item.total,
@@ -106,10 +107,16 @@ export default function CategoryPieChart({ data, total }: Props) {
         </div>
       </div>
 
-      {/* Legend — exact dollar amounts with a share-of-total progress bar */}
+      {/* Legend — bar and % always match the pie slice above (share of total spend).
+          Budget status is shown as a separate line underneath, so the two numbers
+          never contradict each other. */}
       <div className="chart-legend">
         {data.map((item) => {
           const pct = total > 0 ? (item.total / total) * 100 : 0;
+          const budget = budgets[item.category.id];
+          const hasBudget = !!budget && budget > 0;
+          const budgetPct = hasBudget ? Math.round((item.total / budget) * 100) : 0;
+          const over = hasBudget && item.total > budget;
           return (
             <div key={item.category.id} className="legend-item">
               <div className="legend-item-top">
@@ -127,6 +134,11 @@ export default function CategoryPieChart({ data, total }: Props) {
               <div className="progress-bar">
                 <div className="progress-fill" style={{ width: `${Math.min(pct, 100)}%`, background: item.category.color }} />
               </div>
+              {hasBudget && (
+                <div className={`category-budget-label${over ? ' over' : ''}`} style={{ marginTop: 4 }}>
+                  {over ? '⚠ ' : ''}{formatCAD(item.total)} of {formatCAD(budget)} budget used ({budgetPct}%)
+                </div>
+              )}
             </div>
           );
         })}
