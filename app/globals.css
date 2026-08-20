@@ -1619,3 +1619,36 @@ input[type="date"].form-input {
   background: var(--border);
   margin: 16px 0;
 }
+
+.privacy-toggle-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.privacy-toggle-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.privacy-toggle-btn.active {
+  background: var(--accent-light);
+  color: var(--accent-solid);
+  border-color: var(--accent-solid);
+}
+
+.blur-amount {
+  filter: blur(6px);
+  user-select: none;
+  transition: filter 0.15s ease;
+}
