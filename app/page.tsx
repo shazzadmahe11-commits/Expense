@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { formatCAD, formatMonth, formatDate } from '@/lib/utils';
 import CategoryPieChart from '@/components/CategoryPieChart';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, Eye, EyeOff } from 'lucide-react';
 
 interface CardBreakdownItem {
   card: { id: string; name: string; color: string; type: string; limit: number | null };
@@ -43,6 +43,19 @@ export default function DashboardPage() {
   const [recentTx, setRecentTx] = useState<Transaction[]>([]);
   const [totalInvested, setTotalInvested] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [hideAmounts, setHideAmounts] = useState(false);
+
+  useEffect(() => {
+    setHideAmounts(localStorage.getItem('hideAmounts') === '1');
+  }, []);
+
+  const toggleHideAmounts = () => {
+    setHideAmounts((prev) => {
+      const next = !prev;
+      localStorage.setItem('hideAmounts', next ? '1' : '0');
+      return next;
+    });
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -88,6 +101,16 @@ export default function DashboardPage() {
             <p className="page-subtitle">Your monthly spending overview</p>
           </div>
           <div className="dashboard-header-actions">
+            <button
+              type="button"
+              className={`privacy-toggle-btn${hideAmounts ? ' active' : ''}`}
+              onClick={toggleHideAmounts}
+              aria-label={hideAmounts ? 'Show amounts' : 'Hide amounts'}
+              title={hideAmounts ? 'Show amounts' : 'Hide amounts'}
+              id="privacy-toggle-btn"
+            >
+              {hideAmounts ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
             <div className="month-picker">
               <button className="month-btn" onClick={prevMonth} id="prev-month-btn" aria-label="Previous month">‹</button>
               <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
@@ -114,7 +137,7 @@ export default function DashboardPage() {
               <div className="hero-top">
                 <div>
                   <div className="hero-label">Net Amount</div>
-                  <div className="hero-value">{formatCAD(summary.netAmount)}</div>
+                  <div className={`hero-value${hideAmounts ? ' blur-amount' : ''}`}>{formatCAD(summary.netAmount)}</div>
                 </div>
                 <div className="hero-badge">
                   {summary.netAmount >= 0 ? '✓ Positive' : '⚠ Over budget'}
@@ -129,21 +152,21 @@ export default function DashboardPage() {
                 <div className="money-summary-icon down">↓</div>
                 <div>
                   <div className="money-summary-label">Spent</div>
-                  <div className="money-summary-value">{formatCAD(summary.totalExpenses)}</div>
+                  <div className={`money-summary-value${hideAmounts ? ' blur-amount' : ''}`}>{formatCAD(summary.totalExpenses)}</div>
                 </div>
               </div>
               <div className="money-summary-item">
                 <div className="money-summary-icon up">↑</div>
                 <div>
                   <div className="money-summary-label">Income</div>
-                  <div className="money-summary-value">{formatCAD(summary.totalIncome)}</div>
+                  <div className={`money-summary-value${hideAmounts ? ' blur-amount' : ''}`}>{formatCAD(summary.totalIncome)}</div>
                 </div>
               </div>
               <a href="/investments" className="money-summary-item" style={{ textDecoration: 'none' }}>
                 <div className="money-summary-icon invest"><TrendingUp size={16} /></div>
                 <div>
                   <div className="money-summary-label">Invested</div>
-                  <div className="money-summary-value">{formatCAD(totalInvested)}</div>
+                  <div className={`money-summary-value${hideAmounts ? ' blur-amount' : ''}`}>{formatCAD(totalInvested)}</div>
                 </div>
               </a>
             </div>
