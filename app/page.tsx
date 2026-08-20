@@ -104,18 +104,13 @@ export default function DashboardPage() {
   };
   const isCurrentMonth = year === now.getFullYear() && month === now.getMonth();
 
-  // Budget vs. actual for the month currently being viewed — categories.spentThisMonth
-  // always reflects the real calendar month, so cross-reference budgets against
-  // summary.categoryBreakdown (which is already scoped to the selected year/month).
-  const budgetItems = categories
-    .filter((c) => c.budget && c.budget.amount > 0)
-    .map((c) => {
-      const spent = summary?.categoryBreakdown.find((b) => b.category.id === c.id)?.total || 0;
-      const amount = c.budget!.amount;
-      const pct = amount > 0 ? (spent / amount) * 100 : 0;
-      return { category: c, spent, amount, pct };
-    })
-    .sort((a, b) => b.pct - a.pct);
+  // Budget per category, keyed by id — passed to the pie chart so its legend can
+  // show budget usage under each category (spend is already scoped to the
+  // selected month via summary.categoryBreakdown, which the chart reads from).
+  const budgetMap: Record<string, number> = {};
+  for (const c of categories) {
+    if (c.budget && c.budget.amount > 0) budgetMap[c.id] = c.budget.amount;
+  }
 
   return (
     <>
@@ -205,7 +200,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="card-body">
                   {summary.categoryBreakdown.length > 0 ? (
-                    <CategoryPieChart data={summary.categoryBreakdown} total={summary.totalExpenses} />
+                    <CategoryPieChart data={summary.categoryBreakdown} total={summary.totalExpenses} budgets={budgetMap} />
                   ) : (
                     <div className="empty-state">
                       <div className="empty-icon">🍩</div>
@@ -263,48 +258,6 @@ export default function DashboardPage() {
                   )}
                 </div>
               </div>
-
-              {/* Budget */}
-              {budgetItems.length > 0 && (
-                <div className="card full-width">
-                  <div className="card-header">
-                    <span className="card-title">Budget</span>
-                    <a href="/categories" className="btn btn-ghost btn-sm">Manage →</a>
-                  </div>
-                  <div className="card-body" style={{ padding: 0 }}>
-                    <ul className="tx-list">
-                      {budgetItems.map(({ category, spent, amount, pct }) => {
-                        const over = spent > amount;
-                        const barPct = Math.min(100, Math.round(pct));
-                        return (
-                          <li key={category.id} className="category-item">
-                            <div className="category-icon" style={{ background: category.color + '22' }}>
-                              {category.icon}
-                            </div>
-                            <div className="category-info">
-                              <div className="category-name">{category.name}</div>
-                              <div className="category-budget-row">
-                                <div className="category-budget-bar">
-                                  <div
-                                    className="category-budget-fill"
-                                    style={{ width: `${barPct}%`, background: over ? 'var(--red)' : category.color }}
-                                  />
-                                </div>
-                                <span className={`category-budget-label${over ? ' over' : ''}`}>
-                                  {formatCAD(spent)} of {formatCAD(amount)}
-                                </span>
-                              </div>
-                            </div>
-                            <div className={`category-budget-label${over ? ' over' : ''}`} style={{ fontWeight: 600 }}>
-                              {over ? '⚠ ' : ''}{Math.round(pct)}%
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                </div>
-              )}
 
               {/* Recent Transactions */}
               <div className="card full-width">
