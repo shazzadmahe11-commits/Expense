@@ -1,18 +1,25 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { CATEGORY_COLORS } from '@/lib/utils';
+import { CATEGORY_COLORS, formatCAD } from '@/lib/utils';
 
 const CATEGORY_ICONS = ['🍽️', '🛒', '🚗', '⛽', '🎬', '🛍️', '💊', '💡', '📱', '✈️', '💵', '📦', '🏠', '🎓', '🐾', '💰', '🍺', '☕', '🏋️', '🎮'];
 
-interface Category { id: string; name: string; icon: string; color: string; }
+interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  budget: { amount: number } | null;
+  spentThisMonth: number;
+}
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editCat, setEditCat] = useState<Category | null>(null);
-  const [form, setForm] = useState({ name: '', icon: '📦', color: CATEGORY_COLORS[0] });
+  const [form, setForm] = useState({ name: '', icon: '📦', color: CATEGORY_COLORS[0], budgetAmount: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -27,14 +34,14 @@ export default function CategoriesPage() {
 
   const openAdd = () => {
     setEditCat(null);
-    setForm({ name: '', icon: '📦', color: CATEGORY_COLORS[0] });
+    setForm({ name: '', icon: '📦', color: CATEGORY_COLORS[0], budgetAmount: '' });
     setError('');
     setShowModal(true);
   };
 
   const openEdit = (cat: Category) => {
     setEditCat(cat);
-    setForm({ name: cat.name, icon: cat.icon, color: cat.color });
+    setForm({ name: cat.name, icon: cat.icon, color: cat.color, budgetAmount: cat.budget ? String(cat.budget.amount) : '' });
     setError('');
     setShowModal(true);
   };
@@ -89,20 +96,40 @@ export default function CategoriesPage() {
             <div className="loading">Loading...</div>
           ) : categories.length > 0 ? (
             <ul className="tx-list">
-              {categories.map((cat) => (
-                <li key={cat.id} className="category-item">
-                  <div className="category-icon" style={{ background: cat.color + '22' }}>
-                    {cat.icon}
-                  </div>
-                  <div className="category-info">
-                    <div className="category-name">{cat.name}</div>
-                  </div>
-                  <div style={{ display: 'flex', gap: 6 }}>
-                    <button className="btn btn-secondary btn-sm" onClick={() => openEdit(cat)} id={`edit-cat-${cat.id}`}>Edit</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(cat.id)} id={`delete-cat-${cat.id}`}>Delete</button>
-                  </div>
-                </li>
-              ))}
+              {categories.map((cat) => {
+                const hasBudget = !!cat.budget;
+                const pct = hasBudget ? Math.min(100, Math.round((cat.spentThisMonth / cat.budget!.amount) * 100)) : 0;
+                const over = hasBudget && cat.spentThisMonth > cat.budget!.amount;
+                return (
+                  <li key={cat.id} className="category-item">
+                    <div className="category-icon" style={{ background: cat.color + '22' }}>
+                      {cat.icon}
+                    </div>
+                    <div className="category-info">
+                      <div className="category-name">{cat.name}</div>
+                      {hasBudget ? (
+                        <div className="category-budget-row">
+                          <div className="category-budget-bar">
+                            <div
+                              className="category-budget-fill"
+                              style={{ width: `${pct}%`, background: over ? 'var(--red)' : cat.color }}
+                            />
+                          </div>
+                          <span className={`category-budget-label${over ? ' over' : ''}`}>
+                            {formatCAD(cat.spentThisMonth)} of {formatCAD(cat.budget!.amount)}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="category-budget-empty">No budget set</div>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button className="btn btn-secondary btn-sm" onClick={() => openEdit(cat)} id={`edit-cat-${cat.id}`}>Edit</button>
+                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(cat.id)} id={`delete-cat-${cat.id}`}>Delete</button>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <div className="empty-state">
@@ -161,6 +188,11 @@ export default function CategoriesPage() {
                         aria-label={`Select color ${color}`} />
                     ))}
                   </div>
+                </div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="cat-budget">Monthly Budget <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(optional)</span></label>
+                  <input id="cat-budget" type="number" min="0" step="0.01" className="form-input" placeholder="e.g. 500"
+                    value={form.budgetAmount} onChange={e => setForm(f => ({ ...f, budgetAmount: e.target.value }))} />
                 </div>
               </div>
               <div className="modal-footer">
