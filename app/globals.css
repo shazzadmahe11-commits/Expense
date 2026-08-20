@@ -17,6 +17,7 @@
   --accent-light: rgba(122, 156, 234, 0.14);
   --accent-solid: #7a9cea;
   --accent-solid-hover: #6688d6;
+  --accent-rgb: 122, 156, 234;
   --focus-ring: rgba(122, 156, 234, 0.35);
   --green: #6fcf9e;
   --green-bg: rgba(111, 207, 158, 0.13);
@@ -55,6 +56,7 @@
   --accent-light: #e6ecfb;
   --accent-solid: #4f6fd8;
   --accent-solid-hover: #3f5bc4;
+  --accent-rgb: 79, 111, 216;
   --focus-ring: rgba(79, 111, 216, 0.18);
   --green: #2f9461;
   --green-bg: #e6f4ec;
@@ -239,13 +241,13 @@ body {
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 6px 16px -6px rgba(22, 163, 74, 0.45);
+  box-shadow: 0 6px 16px -6px rgba(var(--accent-rgb), 0.45);
   transition: var(--transition);
 }
 
 .sidebar-add-btn:hover {
   background: var(--accent-gradient-hover);
-  box-shadow: 0 8px 20px -6px rgba(22, 163, 74, 0.55);
+  box-shadow: 0 8px 20px -6px rgba(var(--accent-rgb), 0.55);
   transform: translateY(-1px);
 }
 
@@ -1472,7 +1474,7 @@ input[type="date"].form-input {
   justify-content: center;
   background: var(--accent-gradient);
   color: #fff;
-  box-shadow: 0 10px 24px -6px rgba(22, 163, 74, 0.45), 0 4px 10px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 24px -6px rgba(var(--accent-rgb), 0.45), 0 4px 10px rgba(0, 0, 0, 0.12);
   border: 5px solid var(--surface);
   transition: var(--transition);
 }
