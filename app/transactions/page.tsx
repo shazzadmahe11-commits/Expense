@@ -122,21 +122,19 @@ export default function TransactionsPage() {
             <h2 className="page-title">Transactions</h2>
             <p className="page-subtitle">{transactions.length} records · {formatCAD(totalExpenses)} spent · {formatCAD(totalIncome)} income</p>
           </div>
-          <div className="month-picker">
-            <button className="month-btn" onClick={prevMonth} id="tx-prev-month">‹</button>
-            <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
-            <button className="month-btn" onClick={nextMonth} disabled={isCurrentMonth}
-              style={{ opacity: isCurrentMonth ? 0.3 : 1, cursor: isCurrentMonth ? 'not-allowed' : 'pointer' }}
-              id="tx-next-month">›</button>
+          <div className="dashboard-header-actions">
+            <div className="month-picker">
+              <button className="month-btn" onClick={prevMonth} id="tx-prev-month">‹</button>
+              <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
+              <button className="month-btn" onClick={nextMonth} disabled={isCurrentMonth}
+                style={{ opacity: isCurrentMonth ? 0.3 : 1, cursor: isCurrentMonth ? 'not-allowed' : 'pointer' }}
+                id="tx-next-month">›</button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="page-body">
-        <div className="action-bar" style={{ justifyContent: 'flex-end' }}>
-          <button className="btn btn-primary" id="add-transaction-btn" onClick={openAdd}>+ Add</button>
-        </div>
-
         {/* Filters */}
         <div className="filters-bar">
           <select className="filter-select" value={filterType} onChange={e => setFilterType(e.target.value)} id="filter-type">
