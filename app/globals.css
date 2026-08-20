@@ -21,10 +21,14 @@
   --focus-ring: rgba(122, 156, 234, 0.35);
   --green: #6fcf9e;
   --green-bg: rgba(111, 207, 158, 0.13);
+  --green-rgb: 111, 207, 158;
+  --green-gradient: linear-gradient(135deg, #7fd8ab 0%, #3f9d6c 100%);
   --red: #e08b8b;
   --red-bg: rgba(224, 139, 139, 0.13);
   --red-border: rgba(224, 139, 139, 0.32);
   --red-bg-hover: rgba(224, 139, 139, 0.2);
+  --red-rgb: 224, 139, 139;
+  --red-gradient: linear-gradient(135deg, #e59b9b 0%, #c25f5f 100%);
   --blue: #7a9cea;
   --blue-bg: rgba(122, 156, 234, 0.13);
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
@@ -60,10 +64,14 @@
   --focus-ring: rgba(79, 111, 216, 0.18);
   --green: #2f9461;
   --green-bg: #e6f4ec;
+  --green-rgb: 47, 148, 97;
+  --green-gradient: linear-gradient(135deg, #52ab7c 0%, #226b47 100%);
   --red: #c9605f;
   --red-bg: #fbeeee;
   --red-border: #f0cbcb;
   --red-bg-hover: #f6dede;
+  --red-rgb: 201, 96, 95;
+  --red-gradient: linear-gradient(135deg, #d67f7e 0%, #a3413f 100%);
   --blue: #4f6fd8;
   --blue-bg: #eef1fd;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
@@ -452,6 +460,17 @@ body {
   padding: 26px 24px;
   margin-bottom: 16px;
   box-shadow: 0 8px 28px rgba(var(--accent-rgb), 0.28);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card.positive {
+  background: var(--green-gradient);
+  box-shadow: 0 8px 28px rgba(var(--green-rgb), 0.24);
+}
+
+.hero-card.negative {
+  background: var(--red-gradient);
+  box-shadow: 0 8px 28px rgba(var(--red-rgb), 0.24);
 }
 
 .hero-card::before {
