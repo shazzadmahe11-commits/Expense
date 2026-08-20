@@ -42,7 +42,7 @@ export default function MobileNav() {
       </header>
 
       <nav className="bottom-nav">
-        {navItems.map((item) => {
+        {navItems.slice(0, 2).map((item) => {
           const Icon = item.icon;
           return (
             <Link
@@ -55,8 +55,20 @@ export default function MobileNav() {
           );
         })}
         <button type="button" onClick={openAdd} className="bottom-nav-fab" aria-label="Add expense">
-          <Plus size={28} strokeWidth={2.5} />
+          <Plus size={26} strokeWidth={2.5} />
         </button>
+        {navItems.slice(2).map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`bottom-nav-link${pathname === item.href ? ' active' : ''}`}
+            >
+              <Icon size={20} strokeWidth={2} />
+            </Link>
+          );
+        })}
       </nav>
     </>
   );
