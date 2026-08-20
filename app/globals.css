@@ -1179,8 +1179,48 @@ input[type="date"].form-input {
   background: var(--bg);
 }
 
-.category-info { flex: 1; }
+.category-info { flex: 1; min-width: 0; }
 .category-name { font-size: 13.5px; font-weight: 500; }
+
+.category-budget-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.category-budget-bar {
+  flex: 1;
+  max-width: 160px;
+  height: 5px;
+  border-radius: 4px;
+  background: var(--border-light);
+  overflow: hidden;
+}
+
+.category-budget-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.2s ease;
+}
+
+.category-budget-label {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.category-budget-label.over {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.category-budget-empty {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-style: italic;
+}
 
 /* ===== FILTERS ===== */
 .filters-bar {
