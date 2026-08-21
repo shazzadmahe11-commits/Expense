@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { formatCAD, formatMonth, formatDate } from '@/lib/utils';
 import CategoryPieChart from '@/components/CategoryPieChart';
-import { TrendingUp, Eye, EyeOff, Plus } from 'lucide-react';
-import { useTransactionModal } from '@/lib/transaction-modal-context';
+import { TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { usePrivacy } from '@/lib/privacy-context';
 
 interface CardBreakdownItem {
   card: { id: string; name: string; color: string; type: string; limit: number | null };
@@ -45,7 +45,7 @@ interface Transaction {
 }
 
 export default function DashboardPage() {
-  const { openAdd } = useTransactionModal();
+  const { hideAmounts } = usePrivacy();
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
@@ -54,19 +54,6 @@ export default function DashboardPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [totalInvested, setTotalInvested] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [hideAmounts, setHideAmounts] = useState(false);
-
-  useEffect(() => {
-    setHideAmounts(localStorage.getItem('hideAmounts') === '1');
-  }, []);
-
-  const toggleHideAmounts = () => {
-    setHideAmounts((prev) => {
-      const next = !prev;
-      localStorage.setItem('hideAmounts', next ? '1' : '0');
-      return next;
-    });
-  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -123,17 +110,8 @@ export default function DashboardPage() {
             <p className="page-subtitle">Your monthly spending overview</p>
           </div>
           <div className="dashboard-header-actions">
-            <button
-              type="button"
-              onClick={openAdd}
-              className="dash-add-btn"
-              id="dashboard-add-transaction-btn"
-            >
-              <span className="dash-add-btn-icon"><Plus size={13} strokeWidth={2.5} /></span>
-              Add Transaction
-            </button>
             <div className="month-picker">
-              <button className="month-btn" onClick={prevMonth} id="prev-month-btn" aria-label="Previous month">‹</button>
+              <button className="month-btn" onClick={prevMonth} id="prev-month-btn" aria-label="Previous month"><ChevronLeft size={17} strokeWidth={2.25} /></button>
               <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
               <button
                 className="month-btn"
@@ -142,18 +120,8 @@ export default function DashboardPage() {
                 id="next-month-btn"
                 aria-label="Next month"
                 style={{ opacity: isCurrentMonth ? 0.3 : 1, cursor: isCurrentMonth ? 'not-allowed' : 'pointer' }}
-              >›</button>
+              ><ChevronRight size={17} strokeWidth={2.25} /></button>
             </div>
-            <button
-              type="button"
-              className={`privacy-toggle-btn${hideAmounts ? ' active' : ''}`}
-              onClick={toggleHideAmounts}
-              aria-label={hideAmounts ? 'Show amounts' : 'Hide amounts'}
-              title={hideAmounts ? 'Show amounts' : 'Hide amounts'}
-              id="privacy-toggle-btn"
-            >
-              {hideAmounts ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
           </div>
         </div>
       </div>
