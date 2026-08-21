@@ -4,8 +4,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import ThemeToggle from '@/components/ThemeToggle';
-import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, LogOut, Info } from 'lucide-react';
-import FeaturesModal from '@/components/FeaturesModal';
+import { usePrivacy } from '@/lib/privacy-context';
+import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, LogOut, Eye, EyeOff } from 'lucide-react';
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -18,8 +18,8 @@ const navItems = [
 export default function TopBar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { hideAmounts, toggleHideAmounts } = usePrivacy();
   const [email, setEmail] = useState<string | null>(null);
-  const [showFeatures, setShowFeatures] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -38,58 +38,55 @@ export default function TopBar() {
   const initials = email ? email.slice(0, 2).toUpperCase() : '?';
 
   return (
-    <>
-      <header className="topbar">
-        <Link href="/" className="topbar-logo">
-          <img src="/logo.svg" alt="" width={28} height={28} style={{ borderRadius: 8, flexShrink: 0 }} />
-          <span className="topbar-title">Gorib.com</span>
-        </Link>
+    <header className="topbar">
+      <Link href="/" className="topbar-logo">
+        <img src="/logo.svg" alt="" width={28} height={28} style={{ borderRadius: 8, flexShrink: 0 }} />
+        <span className="topbar-title">Gorib.com</span>
+      </Link>
 
-        <nav className="topbar-nav">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`topbar-link${pathname === item.href ? ' active' : ''}`}
-              >
-                <Icon size={16} strokeWidth={2} />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+      <nav className="topbar-nav">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`topbar-link${pathname === item.href ? ' active' : ''}`}
+            >
+              <Icon size={16} strokeWidth={2} />
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
 
-        <div className="topbar-actions">
+      <div className="topbar-actions">
+        <button
+          type="button"
+          onClick={toggleHideAmounts}
+          aria-label={hideAmounts ? 'Show amounts' : 'Hide amounts'}
+          title={hideAmounts ? 'Show amounts' : 'Hide amounts'}
+          className={`topbar-icon-btn${hideAmounts ? ' active' : ''}`}
+        >
+          {hideAmounts ? <EyeOff size={17} strokeWidth={2} /> : <Eye size={17} strokeWidth={2} />}
+        </button>
+
+        <ThemeToggle />
+
+        <div className="topbar-divider" />
+
+        <div className="topbar-profile">
+          <div className="topbar-avatar">{initials}</div>
           <button
             type="button"
-            onClick={() => setShowFeatures(true)}
-            aria-label="What can this app do?"
+            onClick={handleLogout}
+            aria-label="Log out"
             className="topbar-icon-btn"
           >
-            <Info size={17} strokeWidth={2} />
+            <LogOut size={16} strokeWidth={2} />
           </button>
-
-          <ThemeToggle />
-
-          <div className="topbar-divider" />
-
-          <div className="topbar-profile">
-            <div className="topbar-avatar">{initials}</div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              aria-label="Log out"
-              className="topbar-icon-btn"
-            >
-              <LogOut size={16} strokeWidth={2} />
-            </button>
-          </div>
         </div>
-      </header>
-
-      <FeaturesModal open={showFeatures} onClose={() => setShowFeatures(false)} />
-    </>
+      </div>
+    </header>
   );
 }
