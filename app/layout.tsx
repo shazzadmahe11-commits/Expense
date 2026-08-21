@@ -5,6 +5,7 @@ import TopBar from '@/components/TopBar';
 import MobileNav from '@/components/MobileNav';
 import GlobalAddTransactionModal from '@/components/GlobalAddTransactionModal';
 import { TransactionModalProvider } from '@/lib/transaction-modal-context';
+import { PrivacyProvider } from '@/lib/privacy-context';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -51,6 +52,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <PrivacyProvider>
         <TransactionModalProvider>
           <div className="app-layout">
             <TopBar />
@@ -61,6 +63,7 @@ export default function RootLayout({
           <MobileNav />
           <GlobalAddTransactionModal />
         </TransactionModalProvider>
+        </PrivacyProvider>
       </body>
     </html>
   );
