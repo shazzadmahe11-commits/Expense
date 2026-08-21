@@ -4,8 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import ThemeToggle from '@/components/ThemeToggle';
-import { useTransactionModal } from '@/lib/transaction-modal-context';
-import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, LogOut, Plus, Info } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, LogOut, Info } from 'lucide-react';
 import FeaturesModal from '@/components/FeaturesModal';
 
 const navItems = [
@@ -19,7 +18,6 @@ const navItems = [
 export default function TopBar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { openAdd } = useTransactionModal();
   const [email, setEmail] = useState<string | null>(null);
   const [showFeatures, setShowFeatures] = useState(false);
 
@@ -64,16 +62,6 @@ export default function TopBar() {
         </nav>
 
         <div className="topbar-actions">
-          <button
-            type="button"
-            onClick={openAdd}
-            className="topbar-add-btn"
-            id="topbar-add-transaction-btn"
-          >
-            <span className="topbar-add-btn-icon"><Plus size={13} strokeWidth={2.5} /></span>
-            Add Transaction
-          </button>
-
           <button
             type="button"
             onClick={() => setShowFeatures(true)}
