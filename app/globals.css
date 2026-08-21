@@ -188,7 +188,7 @@ body {
   flex-shrink: 0;
 }
 
-.dash-add-btn {
+.page-add-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -206,11 +206,11 @@ body {
   white-space: nowrap;
 }
 
-.dash-add-btn:hover {
+.page-add-btn:hover {
   filter: brightness(1.05);
 }
 
-.dash-add-btn-icon {
+.page-add-btn-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -238,6 +238,11 @@ body {
 .topbar-icon-btn:hover {
   background: var(--surface-hover);
   color: var(--text-primary);
+}
+
+.topbar-icon-btn.active {
+  background: var(--accent-light);
+  color: var(--accent-solid);
 }
 
 .topbar-divider {
@@ -769,64 +774,35 @@ body {
 .month-picker {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 2px;
 }
 
 .month-btn {
   width: 30px;
   height: 30px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--surface);
+  border-radius: 50%;
+  border: none;
+  background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
   transition: var(--transition);
 }
 
 .month-btn:hover {
   background: var(--surface-hover);
   color: var(--text-primary);
-  border-color: var(--border-strong);
 }
 
 .month-label {
   font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
-  min-width: 160px;
+  min-width: 150px;
   text-align: center;
   letter-spacing: -0.2px;
-}
-
-.privacy-toggle-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-  flex-shrink: 0;
-}
-
-.privacy-toggle-btn:hover {
-  background: var(--surface-hover);
-  color: var(--text-primary);
-  border-color: var(--border-strong);
-}
-
-.privacy-toggle-btn.active {
-  background: var(--accent-light);
-  color: var(--accent-solid);
-  border-color: var(--accent-solid);
 }
 
 .blur-amount {
@@ -1729,6 +1705,12 @@ input[type="date"].form-input {
   background: var(--surface-hover);
 }
 
+.theme-toggle-btn.active {
+  background: var(--accent-light);
+  color: var(--accent-solid);
+  border-color: var(--accent-solid);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   :root { --sidebar-width: 0px; }
@@ -1751,50 +1733,17 @@ input[type="date"].form-input {
   .dashboard-header-actions {
     width: 100%;
     justify-content: space-between;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 8px 8px 8px 12px;
-    gap: 6px;
   }
 
-  .dash-add-btn {
+  .page-add-btn {
     display: none;
   }
 
   .month-picker {
     flex: 1;
     min-width: 0;
-    width: auto;
+    width: 100%;
     justify-content: space-between;
-    background: transparent;
-    border: none;
-    padding: 0;
-  }
-
-  .privacy-toggle-btn {
-    width: 30px;
-    height: 30px;
-    border: none;
-    background: transparent;
-    flex-shrink: 0;
-    position: relative;
-  }
-
-  .privacy-toggle-btn::before {
-    content: '';
-    position: absolute;
-    left: -6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1px;
-    height: 20px;
-    background: var(--border);
-  }
-
-  .privacy-toggle-btn.active {
-    background: var(--accent-light);
-    border-radius: 6px;
   }
 
   .month-btn {
