@@ -70,7 +70,7 @@ export default function TopBar() {
             className="topbar-add-btn"
             id="topbar-add-transaction-btn"
           >
-            <Plus size={15} strokeWidth={2.5} />
+            <span className="topbar-add-btn-icon"><Plus size={13} strokeWidth={2.5} /></span>
             Add Transaction
           </button>
 
