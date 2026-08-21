@@ -25,7 +25,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#12141a',
+  themeColor: '#1c1f27',
 };
 
 export default function RootLayout({
@@ -44,7 +44,7 @@ export default function RootLayout({
                 var isLight = t === 'light';
                 if (isLight) document.documentElement.setAttribute('data-theme', 'light');
                 var meta = document.querySelector('meta[name="theme-color"]');
-                if (meta) meta.setAttribute('content', isLight ? '#f7f8fb' : '#12141a');
+                if (meta) meta.setAttribute('content', isLight ? '#ffffff' : '#1c1f27');
               } catch (e) {}
             `,
           }}
