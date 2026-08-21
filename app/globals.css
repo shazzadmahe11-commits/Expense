@@ -188,7 +188,7 @@ body {
   flex-shrink: 0;
 }
 
-.topbar-add-btn {
+.dash-add-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -196,7 +196,7 @@ body {
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
-  padding: 7px 14px 7px 8px;
+  padding: 9px 16px 9px 9px;
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -206,11 +206,11 @@ body {
   white-space: nowrap;
 }
 
-.topbar-add-btn:hover {
+.dash-add-btn:hover {
   filter: brightness(1.05);
 }
 
-.topbar-add-btn-icon {
+.dash-add-btn-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -838,10 +838,17 @@ body {
 /* ===== DASHBOARD GRID ===== */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-areas:
+    "pie cardspend"
+    "pie recent";
   gap: 20px;
   align-items: start;
 }
+
+.dash-pie { grid-area: pie; }
+.dash-cardspend { grid-area: cardspend; }
+.dash-recent { grid-area: recent; }
 
 .dashboard-grid .full-width {
   grid-column: 1 / -1;
@@ -1751,6 +1758,10 @@ input[type="date"].form-input {
     gap: 6px;
   }
 
+  .dash-add-btn {
+    display: none;
+  }
+
   .month-picker {
     flex: 1;
     min-width: 0;
@@ -1825,6 +1836,10 @@ input[type="date"].form-input {
 
   .dashboard-grid {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "pie"
+      "cardspend"
+      "recent";
   }
 
   .hero-card {
