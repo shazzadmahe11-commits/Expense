@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Sidebar from '@/components/Sidebar';
+import TopBar from '@/components/TopBar';
 import MobileNav from '@/components/MobileNav';
 import GlobalAddTransactionModal from '@/components/GlobalAddTransactionModal';
 import { TransactionModalProvider } from '@/lib/transaction-modal-context';
@@ -53,7 +53,7 @@ export default function RootLayout({
       <body>
         <TransactionModalProvider>
           <div className="app-layout">
-            <Sidebar />
+            <TopBar />
             <main className="main-content">
               {children}
             </main>
