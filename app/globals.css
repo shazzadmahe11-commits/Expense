@@ -1398,12 +1398,19 @@ input[type="date"].form-input {
 }
 
 /* ===== PROGRESS BAR ===== */
+.progress-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
 .progress-bar {
   position: relative;
-  height: 22px;
+  flex: 1;
+  height: 14px;
   background: var(--border-light);
   border-radius: 7px;
-  margin-top: 6px;
   overflow: hidden;
 }
 
@@ -1413,21 +1420,17 @@ input[type="date"].form-input {
   transition: width 0.5s ease;
 }
 
-.progress-bar-label {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 0 9px;
+.progress-bar-pct {
+  flex-shrink: 0;
   font-size: 11px;
-  font-weight: 600;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  pointer-events: none;
+  font-weight: 700;
+  color: var(--text-secondary);
+  min-width: 30px;
+  text-align: right;
+}
+
+.progress-bar-pct.over {
+  color: var(--red);
 }
 
 /* ===== ANIMATIONS ===== */
