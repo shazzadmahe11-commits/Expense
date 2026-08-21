@@ -153,14 +153,16 @@ export default function DashboardPage() {
         ) : summary ? (
           <>
             {/* Hero: Net Amount */}
-            <div className={`hero-card${summary.netAmount >= 0 ? ' positive' : ' negative'}`}>
+            <div className={`hero-card${
+              summary.netAmount <= 0 ? ' hard-negative' : summary.netAmount > 100 ? ' positive' : ' negative'
+            }`}>
               <div className="hero-top">
                 <div>
                   <div className="hero-label">Net Amount</div>
                   <div className={`hero-value${hideAmounts ? ' blur-amount' : ''}`}>{formatCAD(summary.netAmount)}</div>
                 </div>
                 <div className="hero-badge">
-                  {summary.netAmount >= 0 ? '✓ Positive' : '⚠ Over budget'}
+                  {summary.netAmount <= 0 ? '⚠ Over budget' : summary.netAmount > 100 ? '✓ Positive' : '⚠ Low balance'}
                 </div>
               </div>
               <div className="hero-sub">All time · {formatMonth(new Date(year, month, 1))} activity below</div>
