@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { formatCAD, formatDate, formatMonth, todayLocalISO, CARD_COLORS, CATEGORY_COLORS } from '@/lib/utils';
+import { Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Card { id: string; name: string; type: string; color: string; limit: number | null; }
 interface Category { id: string; name: string; icon: string; color: string; }
@@ -123,12 +124,21 @@ export default function TransactionsPage() {
             <p className="page-subtitle">{transactions.length} records · {formatCAD(totalExpenses)} spent · {formatCAD(totalIncome)} income</p>
           </div>
           <div className="dashboard-header-actions">
+            <button
+              type="button"
+              onClick={openAdd}
+              className="page-add-btn"
+              id="tx-add-transaction-btn"
+            >
+              <span className="page-add-btn-icon"><Plus size={13} strokeWidth={2.5} /></span>
+              Add Transaction
+            </button>
             <div className="month-picker">
-              <button className="month-btn" onClick={prevMonth} id="tx-prev-month">‹</button>
+              <button className="month-btn" onClick={prevMonth} id="tx-prev-month" aria-label="Previous month"><ChevronLeft size={17} strokeWidth={2.25} /></button>
               <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
               <button className="month-btn" onClick={nextMonth} disabled={isCurrentMonth}
                 style={{ opacity: isCurrentMonth ? 0.3 : 1, cursor: isCurrentMonth ? 'not-allowed' : 'pointer' }}
-                id="tx-next-month">›</button>
+                id="tx-next-month" aria-label="Next month"><ChevronRight size={17} strokeWidth={2.25} /></button>
             </div>
           </div>
         </div>
