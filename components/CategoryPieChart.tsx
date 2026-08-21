@@ -119,23 +119,29 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
           const over = hasBudget && item.total > budget;
           const barPct = hasBudget ? budgetPct : pct;
           return (
-            <div key={item.category.id} className="legend-item">
+            <div key={item.category.id} className={`legend-item${over ? ' over-budget' : ''}`}>
               <div className="legend-item-top">
                 <div className="legend-left">
                   <div className="color-dot" style={{ background: item.category.color }} />
                   <span>{item.category.icon} {item.category.name}</span>
                 </div>
-                <span className="legend-value">{formatCAD(item.total)}</span>
+                <span className={`legend-value${over ? ' over' : ''}`}>
+                  {hasBudget ? `${formatCAD(item.total)} / ${formatCAD(budget)}` : formatCAD(item.total)}
+                </span>
               </div>
+              {over && (
+                <div className="over-budget-alert">
+                  <span className="over-budget-alert-icon">⚠</span>
+                  Over budget by {formatCAD(item.total - budget)}
+                </div>
+              )}
               <div className="progress-bar">
                 <div
                   className="progress-fill"
                   style={{ width: `${Math.min(barPct, 100)}%`, background: over ? 'var(--red)' : item.category.color }}
                 />
                 {hasBudget && (
-                  <span className="progress-bar-label">
-                    {over ? '⚠ ' : ''}{formatCAD(item.total)} of {formatCAD(budget)} ({budgetPct}%)
-                  </span>
+                  <span className="progress-bar-label">{budgetPct}%</span>
                 )}
               </div>
             </div>
