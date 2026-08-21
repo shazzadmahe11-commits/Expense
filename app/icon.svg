@@ -8,6 +8,10 @@
       <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
       <stop offset="45%" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
+    <linearGradient id="coin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd76a"/>
+      <stop offset="100%" stop-color="#f5a524"/>
+    </linearGradient>
   </defs>
 
   <rect width="512" height="512" rx="114" fill="url(#bg)"/>
@@ -17,11 +21,15 @@
   <circle cx="440" cy="70" r="90" fill="#ffffff" opacity="0.08"/>
   <circle cx="60" cy="460" r="80" fill="#ffffff" opacity="0.06"/>
 
-  <!-- Monogram G with an upward growth tick -->
-  <text x="50%" y="61%" text-anchor="middle" font-family="Arial, Helvetica, sans-serif"
-        font-weight="800" font-size="272" fill="#ffffff">G</text>
+  <!-- Wallet body -->
+  <rect x="98" y="176" width="316" height="222" rx="34" fill="#ffffff"/>
+  <!-- Wallet flap crease -->
+  <path d="M98 234 h316" stroke="#d9ede0" stroke-width="10" stroke-linecap="round" opacity="0.9"/>
+  <!-- Wallet stitch trim -->
+  <rect x="98" y="176" width="316" height="222" rx="34" fill="none" stroke="#15803d" stroke-opacity="0.10" stroke-width="6"/>
 
-  <!-- Small upward trend accent -->
-  <path d="M 336 168 L 392 128 L 392 158 L 356 184 Z" fill="#ffffff" opacity="0.95"/>
-  <path d="M 336 168 L 392 128 L 366 124 L 330 150 Z" fill="#ffffff" opacity="0.95"/>
+  <!-- Coin badge (dollar) -->
+  <circle cx="360" cy="300" r="66" fill="url(#coin)" stroke="#ffffff" stroke-width="10"/>
+  <text x="360" y="326" text-anchor="middle" font-family="Arial, Helvetica, sans-serif"
+        font-weight="800" font-size="72" fill="#7a4a04">$</text>
 </svg>
