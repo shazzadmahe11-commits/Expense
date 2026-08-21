@@ -135,13 +135,15 @@ export default function CategoryPieChart({ data, total, budgets = {} }: Props) {
                   Over budget by {formatCAD(item.total - budget)}
                 </div>
               )}
-              <div className="progress-bar">
-                <div
-                  className="progress-fill"
-                  style={{ width: `${Math.min(barPct, 100)}%`, background: over ? 'var(--red)' : item.category.color }}
-                />
+              <div className="progress-bar-row">
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${Math.min(barPct, 100)}%`, background: over ? 'var(--red)' : item.category.color }}
+                  />
+                </div>
                 {hasBudget && (
-                  <span className="progress-bar-label">{budgetPct}%</span>
+                  <span className={`progress-bar-pct${over ? ' over' : ''}`}>{budgetPct}%</span>
                 )}
               </div>
             </div>
