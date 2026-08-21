@@ -25,10 +25,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f5faf6' },
-    { media: '(prefers-color-scheme: dark)', color: '#0e1013' },
-  ],
+  themeColor: '#12141a',
 };
 
 export default function RootLayout({
@@ -44,7 +41,10 @@ export default function RootLayout({
             __html: `
               try {
                 var t = localStorage.getItem('theme');
-                if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+                var isLight = t === 'light';
+                if (isLight) document.documentElement.setAttribute('data-theme', 'light');
+                var meta = document.querySelector('meta[name="theme-color"]');
+                if (meta) meta.setAttribute('content', isLight ? '#f7f8fb' : '#12141a');
               } catch (e) {}
             `,
           }}
