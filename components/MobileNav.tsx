@@ -1,12 +1,11 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import ThemeToggle from '@/components/ThemeToggle';
 import { useTransactionModal } from '@/lib/transaction-modal-context';
-import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, Plus, LogOut, Info } from 'lucide-react';
-import FeaturesModal from '@/components/FeaturesModal';
+import { usePrivacy } from '@/lib/privacy-context';
+import { LayoutDashboard, ArrowLeftRight, CreditCard, Tags, TrendingUp, Plus, LogOut, Eye, EyeOff } from 'lucide-react';
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -20,7 +19,7 @@ export default function MobileNav() {
   const pathname = usePathname();
   const router = useRouter();
   const { openAdd } = useTransactionModal();
-  const [showFeatures, setShowFeatures] = useState(false);
+  const { hideAmounts, toggleHideAmounts } = usePrivacy();
 
   if (pathname === '/login') return null;
 
@@ -40,16 +39,15 @@ export default function MobileNav() {
         </Link>
         <button
           type="button"
-          onClick={() => setShowFeatures(true)}
-          aria-label="What can this app do?"
-          style={{ border: 'none', background: 'transparent', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', padding: 6 }}
+          onClick={toggleHideAmounts}
+          aria-label={hideAmounts ? 'Show amounts' : 'Hide amounts'}
+          title={hideAmounts ? 'Show amounts' : 'Hide amounts'}
+          className={`theme-toggle-btn${hideAmounts ? ' active' : ''}`}
         >
-          <Info size={19} strokeWidth={2} />
+          {hideAmounts ? <EyeOff size={16} strokeWidth={2} /> : <Eye size={16} strokeWidth={2} />}
         </button>
         <ThemeToggle />
       </header>
-
-      <FeaturesModal open={showFeatures} onClose={() => setShowFeatures(false)} />
 
       <nav className="bottom-nav">
         {navItems.slice(0, 3).map((item) => {
