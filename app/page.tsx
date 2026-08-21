@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { formatCAD, formatMonth, formatDate } from '@/lib/utils';
 import CategoryPieChart from '@/components/CategoryPieChart';
-import { TrendingUp, Eye, EyeOff } from 'lucide-react';
+import { TrendingUp, Eye, EyeOff, Plus } from 'lucide-react';
+import { useTransactionModal } from '@/lib/transaction-modal-context';
 
 interface CardBreakdownItem {
   card: { id: string; name: string; color: string; type: string; limit: number | null };
@@ -44,6 +45,7 @@ interface Transaction {
 }
 
 export default function DashboardPage() {
+  const { openAdd } = useTransactionModal();
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
@@ -121,6 +123,15 @@ export default function DashboardPage() {
             <p className="page-subtitle">Your monthly spending overview</p>
           </div>
           <div className="dashboard-header-actions">
+            <button
+              type="button"
+              onClick={openAdd}
+              className="dash-add-btn"
+              id="dashboard-add-transaction-btn"
+            >
+              <span className="dash-add-btn-icon"><Plus size={13} strokeWidth={2.5} /></span>
+              Add Transaction
+            </button>
             <div className="month-picker">
               <button className="month-btn" onClick={prevMonth} id="prev-month-btn" aria-label="Previous month">‹</button>
               <span className="month-label">{formatMonth(new Date(year, month, 1))}</span>
@@ -196,7 +207,7 @@ export default function DashboardPage() {
             {/* Charts & Breakdowns */}
             <div className="dashboard-grid">
               {/* Pie Chart */}
-              <div className="card">
+              <div className="card dash-pie">
                 <div className="card-header">
                   <span className="card-title">Spending by Category</span>
                 </div>
@@ -214,7 +225,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Card Breakdown */}
-              <div className="card">
+              <div className="card dash-cardspend">
                 <div className="card-header">
                   <span className="card-title">Card Spending</span>
                   <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>This month</span>
@@ -262,7 +273,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Recent Transactions */}
-              <div className="card full-width">
+              <div className="card dash-recent">
                 <div className="card-header">
                   <span className="card-title">Recent Transactions</span>
                   <a href="/transactions" className="btn btn-ghost btn-sm">View all →</a>
