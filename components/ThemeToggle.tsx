@@ -16,7 +16,7 @@ export default function ThemeToggle() {
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', next === 'light' ? '#f7f8fb' : '#12141a');
+    if (meta) meta.setAttribute('content', next === 'light' ? '#ffffff' : '#1c1f27');
   };
 
   return (
